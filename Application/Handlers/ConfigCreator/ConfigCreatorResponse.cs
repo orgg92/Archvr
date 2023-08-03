@@ -8,6 +8,14 @@
 
     public class ConfigCreatorResponse
     {
-        public bool ConfigCreated { get; set; }
+        public ConfigCreated ConfigCreated { get; set; }
+    }
+
+    public enum ConfigCreated
+    {
+        True,
+        False,
+        Error
+
     }
 }

@@ -6,7 +6,8 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    internal class FolderScannerResponse
+    public class FolderScannerResponse
     {
+        public IEnumerable<string> FileList { get; set; }
     }
 }

@@ -6,7 +6,8 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    internal class FileArchiverResponse
+    public class FileArchiverResponse
     {
+        public bool ArchiveSuccess { get; set; }
     }
 }

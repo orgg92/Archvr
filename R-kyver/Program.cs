@@ -1,16 +1,83 @@
-﻿// See https://aka.ms/new-console-template for more information
-//Console.WriteLine("Hello, World!");
+﻿namespace Rkyver 
+{
+    using Application;
+    using Application.Handlers.ConfigCreator;
+    using Application.Handlers.ConfigLoader;
+    using Application.Handlers.FileArchiver;
+    using Application.Handlers.FolderScanner;
+    using Application.Services;
+    using MediatR;
+    using Microsoft.Extensions.DependencyInjection;
+    using System;
+    using System.Reflection;
 
-// detect if config exists 
+    public class Program
+    {
 
-// if no config, create
+        static async Task Main(string[] args)
+        {
+            var _serviceCollection = new ServiceCollection()
+                 .AddMediatR(AppDomain.CurrentDomain.GetAssemblies())
+                 .AddTransient<IMediatorService, MediatorService>()
+                 .BuildServiceProvider();
 
-// scan config for source paths to archive
+            var _mediator = _serviceCollection.GetService<IMediator>();
 
-// check destination directory/ies against folders in source 
+            var configCreation = await _mediator.Send(new ConfigCreatorCommand());
 
-// if source file doesn't exist in destination folder, copy
+            if (configCreation.ConfigCreated == ConfigCreated.False)
+            {
+                // load config if creation if config exists 
 
-// if file exists and source is newer than destination file, overwrite file
+                var configResult = await _mediator.Send(new ConfigLoaderCommand());
 
-// if file is locked, back off for x minutes. if file is retried x times, skip file (until end?)
+                // scan config for source paths to archive
+
+                if (configResult.ConfigLoaded)
+                {
+                    Console.WriteLine(SharedContent.ResponsiveSpacer);
+                    Console.WriteLine("Config loaded");
+                    Console.WriteLine(SharedContent.ResponsiveSpacer);
+
+                    var result = await _mediator.Send(new FolderScannerCommand());
+
+                    result.FileList.Select(async x =>
+                    {
+                        var processFile = await _mediator.Send(new FileArchiverCommand() { FileName = x });
+
+                        if (!processFile.ArchiveSuccess)
+                        {
+                            // add to locked list
+                        }
+                    });
+
+
+
+
+                    // try each locked file {
+
+                    // log result... back off... skip over if retry limit reached
+
+                    // }
+
+
+                    // report on skipped files
+                }
+                else
+                {
+                    Console.WriteLine("There was an issue loading configuration settings... Check config.ini");
+                }
+            }
+            else if (configCreation.ConfigCreated == ConfigCreated.True)
+            {
+                // user needs to setup their config file after creation
+
+
+            }
+
+
+        }
+    }
+}
+
+

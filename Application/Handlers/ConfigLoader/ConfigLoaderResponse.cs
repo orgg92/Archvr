@@ -8,6 +8,6 @@
 
     public class ConfigLoaderResponse
     {
-        public bool ConfigExists { get; set; }
+        public bool ConfigLoaded { get; set; }
     }
 }
