@@ -1,6 +1,7 @@
 ﻿namespace Rkyver 
 {
     using Application;
+    using Application.Common;
     using Application.Handlers.ConfigCreator;
     using Application.Handlers.ConfigLoader;
     using Application.Handlers.FileArchiver;
@@ -18,6 +19,7 @@
         {
             var _serviceCollection = new ServiceCollection()
                  .AddMediatR(AppDomain.CurrentDomain.GetAssemblies())
+                 .AddTransient(typeof(IPipelineBehavior<,>), typeof(ProgramNotificationPipelineBehaviour<,>))
                  .AddTransient<IMediatorService, MediatorService>()
                  .BuildServiceProvider();
 
@@ -35,9 +37,6 @@
 
                 if (configResult.ConfigLoaded)
                 {
-                    Console.WriteLine(SharedContent.ResponsiveSpacer);
-                    Console.WriteLine("Config loaded");
-                    Console.WriteLine(SharedContent.ResponsiveSpacer);
 
                     var result = await _mediator.Send(new FolderScannerCommand());
 

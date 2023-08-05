@@ -19,7 +19,7 @@
             "LOG_PROGRESS_TO_CONSOLE='true'",
             "DIRFILELOCATION=''",
             "OUTPUT_LOCATION=''",
-            "CONSOLE_HEIGHT=25''",
+            "CONSOLE_HEIGHT='25'",
             "CONSOLE_WIDTH='100'"
         };
 
@@ -29,8 +29,8 @@
         {
             this.ConfigLocations = new Tuple<string, string>[] {
                 new Tuple<string, string> (SharedContent.LogPath ,   SharedContent.LogName),
-                new Tuple<string, string> (SharedContent.ConfigDirPath,  SharedContent.DirListFileLocation), // only need 
-                new Tuple<string, string> (SharedContent.ConfigDirPath,  SharedContent.ConfigFullPath )
+                new Tuple<string, string> (SharedContent.ConfigDirectoryPath,  SharedContent.DirListFileLocation), // only need 
+                new Tuple<string, string> (SharedContent.ConfigDirectoryPath,  SharedContent.ConfigFullPath )
             };
         }
 
@@ -53,7 +53,7 @@
 
         public bool CheckConfigExists()
         {
-            return Directory.Exists(SharedContent.ConfigDirPath);          
+            return Directory.Exists(SharedContent.ConfigDirectoryPath);          
         }
 
         public ConfigCreatorResponse WriteNewConfigFile()

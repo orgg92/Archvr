@@ -6,7 +6,7 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    public class FolderScannerResponse
+    public class FolderScannerResponse : BaseResponse
     {
         public IEnumerable<string> FileList { get; set; }
     }

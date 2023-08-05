@@ -1,4 +1,4 @@
-﻿namespace Application.Handlers.ConfigLoader
+﻿namespace Application.Common
 {
     using System;
     using System.Collections.Generic;
@@ -6,8 +6,8 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    public class ConfigLoaderResponse : BaseResponse
+    public class ProgramException : Exception
     {
-        public bool ConfigLoaded { get; set; }
     }
+
 }

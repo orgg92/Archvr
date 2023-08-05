@@ -38,7 +38,7 @@
 
         public bool CheckConfigExists()
         {
-            return Directory.Exists(SharedContent.ConfigDirPath) && Directory.Exists(SharedContent.LogPath);
+            return Directory.Exists(SharedContent.ConfigDirectoryPath) && Directory.Exists(SharedContent.LogPath);
         }
 
         public void LoadConfig()
@@ -54,24 +54,25 @@
             SharedContent.DestinationDrive = SharedContent.configValues[1];
             SharedContent.RetryCount = SharedContent.configValues[2];
             SharedContent.LogProgressToConsole = Boolean.Parse(SharedContent.configValues[3]);
-            SharedContent.OutputLocation = SharedContent.configValues[4];
-            SharedContent.DirListFileLocation = SharedContent.configValues[5];
-            SharedContent.ConsoleHeight = SharedContent.configValues[6];
-            SharedContent.ConsoleWidth = SharedContent.configValues[7];
+            SharedContent.DirListFileLocation = SharedContent.configValues[4];
+            SharedContent.OutputLocation = SharedContent.configValues[5];
+            SharedContent.ConsoleHeight = int.TryParse(SharedContent.configValues[6], out int ch) ? ch : 25;
+            SharedContent.ConsoleWidth = int.TryParse(SharedContent.configValues[7], out int cw) ? cw : 100;
 
             SetConsoleSize();
 
-            SharedContent.ResponsiveSpacer = new String('*', int.Parse(SharedContent.ConsoleWidth));
+            SharedContent.ResponsiveSpacer = new String('*', SharedContent.ConsoleWidth);
+        }
+
+        // allows program to run 
+        public void LoadDefaultValues()
+        {
+
         }
 
         public void SetConsoleSize()
         {
-            var consoleHeight = int.TryParse(SharedContent.ConsoleHeight, out var h) ? h : 25;
-            var consoleWidth = int.TryParse(SharedContent.ConsoleWidth, out var w) ? w : 100;
-            SharedContent.ConsoleHeight = consoleHeight.ToString();
-            SharedContent.ConsoleWidth = consoleWidth.ToString();
-
-            Console.SetWindowSize(consoleWidth, consoleHeight);
+            Console.SetWindowSize(SharedContent.ConsoleWidth, SharedContent.ConsoleHeight);
         }
     }
 }

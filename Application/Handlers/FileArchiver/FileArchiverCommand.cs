@@ -20,7 +20,9 @@
                 return new FileArchiverResponse() { ArchiveSuccess = true };
             } catch (Exception e)
             {
-                return new FileArchiverResponse() { ArchiveSuccess = false };
+                var exception = new ProgramException() { ErrorCode = "ArchiveError", ErrorMessage = "There was an error" };
+                return new FileArchiverResponse() { ArchiveSuccess = false, HandlerException = exception };
+                    
             }
 
         }

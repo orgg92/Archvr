@@ -10,7 +10,8 @@
     {
         public async Task<FolderScannerResponse> Handle(FolderScannerCommand request, CancellationToken cancellationToken)
         {
-            var sourceDirector = Directory.EnumerateFiles($"{SharedContent.TargetDrive}/{SharedContent.DirListFileLocation}");
+            var test = SharedContent.DirListFileLocation;
+            var sourceDirector = Directory.EnumerateFiles(SharedContent.DirListFileLocation);
 
             return new FolderScannerResponse();
         }
