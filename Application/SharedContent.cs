@@ -18,11 +18,11 @@
              DestinationDrive = String.Empty,
              Spacer = "************************************************************** \r\n",
              WelcomeMessage = $"{Spacer} [{DateTime.UtcNow}]: Starting archive process \r\n{Spacer}",
-             LogPath = $"{CurrentPath}\\Logs\\",
-             LogName = $"{LogPath}\\logfile.log",
-             ConfigDirectoryPath = $"{CurrentPath}\\Config\\",
-             ConfigFullPath = $"{ConfigDirectoryPath}\\config.ini",
-             DirListFileLocation = $"{ConfigDirectoryPath}\\directory-list.txt",
+             LogPath = FilePathCreator(CurrentPath, "Logs\\"),
+             LogName = FilePathCreator(LogPath, "logfile.log"),
+             ConfigDirectoryPath = FilePathCreator(CurrentPath, "Config\\"),
+             ConfigFullPath = FilePathCreator(ConfigDirectoryPath, "config.ini"),
+             DirListFileLocation = FilePathCreator(ConfigDirectoryPath, "directory-list.txt"),
              UserDestinationDrive = String.Empty,
              OutputLocation = String.Empty,
              RetryCount = String.Empty,
@@ -61,9 +61,15 @@
             new HandlerLoggingKeyValuePair() { Name = "FileArchiverCommand", Message = "Attempting to archive file..."}
         };
 
+        public static string FilePathCreator(string directory, string filePath)
+        {
+            return System.IO.Path.Combine(directory, filePath).Replace(@"\\", @"\");
+        }
 
-
-
+        public static string FormatDriveToStringContext()
+        {
+            return $"{SharedContent.TargetDrive}:\\";
+        }
 
     }
 

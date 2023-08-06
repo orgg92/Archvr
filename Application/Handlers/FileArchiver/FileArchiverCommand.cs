@@ -13,9 +13,14 @@
         {
             try
             {
-                // if source file doesn't exist in destination folder, copy
+                // if SOURCE VERSION OF THE DESTINATION FILE doesn't exist
+                // OR
+                // the DESTINATION FILE last modified is before the SOURCE FILE'S last modified
 
-                // if file exists and source is newer than destination file's last save, overwrite file  
+                if (!File.Exists(request.FileName) /*|| File.GetLastWriteTime()*/)
+                {
+
+                }
 
                 return new FileArchiverResponse() { ArchiveSuccess = true };
             } catch (Exception e)

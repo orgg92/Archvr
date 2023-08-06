@@ -10,10 +10,20 @@
     {
         public async Task<FolderScannerResponse> Handle(FolderScannerCommand request, CancellationToken cancellationToken)
         {
-            var test = SharedContent.DirListFileLocation;
-            var sourceDirector = Directory.EnumerateFiles(SharedContent.DirListFileLocation);
+            // read directories from DirListFileLocation
 
-            return new FolderScannerResponse();
+            var fr = File.ReadAllLines(SharedContent.DirListFileLocation);
+
+            var fileList = new List<string>();
+            
+            foreach (var directory in fr)
+            {
+                fileList.AddRange(Directory.EnumerateFiles(SharedContent.FilePathCreator(SharedContent.FormatDriveToStringContext(), directory)));
+             }
+
+            
+
+            return new FolderScannerResponse() {  FileList = fileList };
         }
     }
 }

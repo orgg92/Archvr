@@ -69,6 +69,8 @@
             }
             else if (configCreation.ConfigCreated == ConfigCreated.True)
             {
+
+                Console.WriteLine("Config created but requires user setup");
                 // user needs to setup their config file after creation
 
 
