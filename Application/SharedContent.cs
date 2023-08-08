@@ -46,10 +46,13 @@
             $"What is the file path to the location of file containing files for backup? (Leave blank for default: {SharedContent.DirListFileLocation})"
         };
 
-        public static IEnumerable<ProgramException> ProgramExceptions = new ProgramException[]
+        public static IEnumerable<HandlerLoggingKeyValuePair> ProgramExceptions = new HandlerLoggingKeyValuePair[]
         {
-            new ProgramException() { ErrorCode = "CONFIG_PARSE", ErrorMessage = "There was an issue loading config" },
-            new ProgramException() { ErrorCode = "FILE_LOCK", ErrorMessage = "A file was locked for too long" }
+            new HandlerLoggingKeyValuePair() { Name = "CONFIG_PARSE", Message = "There was an issue loading config." },
+            new HandlerLoggingKeyValuePair() { Name = "FILE_LOCK", Message = "A file was locked for too long." },
+            new HandlerLoggingKeyValuePair() { Name = "CONFIG_CREATION_ERROR", Message = "There was an issue creating program config."},
+            new HandlerLoggingKeyValuePair() { Name = "CONFIG_LOAD_ERROR", Message = "There was an issue parsing program config."},
+            new HandlerLoggingKeyValuePair() { Name = "FOLDER_SCAN", Message = "There was an issue scanning directories."}
 
         };
 
@@ -80,7 +83,7 @@
     }
 
 
-    public class ProgramException
+    public class ProgramException : Exception
     {
         public string ErrorCode { get; set; }
         public string ErrorMessage { get; set; }

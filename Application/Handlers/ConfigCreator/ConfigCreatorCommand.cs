@@ -50,7 +50,7 @@
 
             } catch (Exception e)
             {
-                return new ConfigCreatorResponse() { ConfigCreated = ConfigCreated.Error };
+                throw new ProgramException() { ErrorCode = "CONFIG_CREATION_ERROR", ErrorMessage = e.Message };
             }
 
         }

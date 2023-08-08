@@ -17,14 +17,21 @@
 
         public async Task<ConfigLoaderResponse> Handle(ConfigLoaderCommand request, CancellationToken cancellationToken)
         {
-            if (CheckConfigExists() && CheckConfigHasBeenTouched())
+            try
             {
-                LoadConfig();
+                if (CheckConfigExists() && CheckConfigHasBeenTouched())
+                {
+                    LoadConfig();
 
-                return new ConfigLoaderResponse() { ConfigLoaded = true };
-            } else
+                    return new ConfigLoaderResponse() { ConfigLoaded = true };
+                }
+                else
+                {
+                    return new ConfigLoaderResponse() { ConfigLoaded = false };
+                }
+            } catch (Exception e)
             {
-                return new ConfigLoaderResponse() { ConfigLoaded = false };
+                throw new ProgramException() { ErrorCode = "CONFIG_LOAD_ERROR", ErrorMessage = e.Message };
             }
 
 

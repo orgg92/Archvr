@@ -19,7 +19,7 @@
         {
             var _serviceCollection = new ServiceCollection()
                  .AddMediatR(AppDomain.CurrentDomain.GetAssemblies())
-                 .AddTransient(typeof(IPipelineBehavior<,>), typeof(ProgramNotificationPipelineBehaviour<,>))
+                 .AddTransient(typeof(IPipelineBehavior<,>), typeof(BaseHandlerPipelineBehaviour<,>))
                  .AddTransient<IMediatorService, MediatorService>()
                  .BuildServiceProvider();
 

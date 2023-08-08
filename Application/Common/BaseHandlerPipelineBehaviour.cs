@@ -8,7 +8,7 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    public class ProgramNotificationPipelineBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : MediatR.IRequest<TResponse> 
+    public class BaseHandlerPipelineBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : MediatR.IRequest<TResponse> 
     {
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
@@ -25,8 +25,9 @@
 
                 return response;
             }
-            catch (Exception e)
+            catch (ProgramException e)
             {
+                Console.WriteLine(SharedContent.ProgramExceptions.Where(y => y.Name == e.ErrorCode).Select(y => y.Message).First());
                 throw e;
             }
         }
