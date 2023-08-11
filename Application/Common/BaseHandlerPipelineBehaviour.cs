@@ -12,22 +12,23 @@
     {
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
-            // any request that throws an error gets reported in the same format here
+            // find the logging announcement and write to console
 
             var handlerName = typeof(TRequest).Name;
 
             try
             {
-                Console.WriteLine(SharedContent.ResponsiveSpacer);
-                Console.WriteLine(SharedContent.HandlerLoggingMessages.Where(y => y.Name == handlerName).Select(y => y.Message).First());
+                
+                SharedContent.LogToConsole(SharedContent.ReturnMessageForHandler(handlerName));
 
                 var response = await next();
 
                 return response;
             }
+            // in all handlers throw a ProgramException so that all exceptions produce an error code and a corresponding console message
             catch (ProgramException e)
             {
-                Console.WriteLine(SharedContent.ProgramExceptions.Where(y => y.Name == e.ErrorCode).Select(y => y.Message).First());
+                SharedContent.LogToConsole(SharedContent.ReturnErrorMessageForErrorCode(e.ErrorCode), true);
                 throw e;
             }
         }

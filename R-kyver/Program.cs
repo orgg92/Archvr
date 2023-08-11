@@ -40,15 +40,25 @@
 
                     var result = await _mediator.Send(new FolderScannerCommand());
 
-                    result.FileList.Select(async x =>
+                    //result.FileList.Select(async x =>
+                    //{
+                    //    var processFile = await _mediator.Send(new FileArchiverCommand() { FileName = x });
+
+                    //    if (!processFile.ArchiveSuccess)
+                    //    {
+                    //        // add to locked list
+                    //    }
+                    //});
+
+                    foreach(var file in result.FileList)
                     {
-                        var processFile = await _mediator.Send(new FileArchiverCommand() { FileName = x });
+                        var processFile = await _mediator.Send(new FileArchiverCommand() { FileName = file });
 
                         if (!processFile.ArchiveSuccess)
                         {
                             // add to locked list
-                        }
-                    });
+                        };
+                    }
 
 
 

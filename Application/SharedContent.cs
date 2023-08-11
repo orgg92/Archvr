@@ -1,5 +1,6 @@
 ﻿namespace Application
 {
+    using MediatR.Wrappers;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -27,7 +28,9 @@
              OutputLocation = String.Empty,
              RetryCount = String.Empty,
              ProgressMeter = $"{0}% complete",
-             ResponsiveSpacer = String.Empty;
+             ResponsiveSpacer = String.Empty,
+             ArchiveFolderName = String.Empty,
+             ArchivePath = String.Empty; // this is {targetDrive}/{archiveFolderName}/< full file path >
 
         public static int ConsoleHeight, ConsoleWidth;
 
@@ -52,7 +55,7 @@
             new HandlerLoggingKeyValuePair() { Name = "FILE_LOCK", Message = "A file was locked for too long." },
             new HandlerLoggingKeyValuePair() { Name = "CONFIG_CREATION_ERROR", Message = "There was an issue creating program config."},
             new HandlerLoggingKeyValuePair() { Name = "CONFIG_LOAD_ERROR", Message = "There was an issue parsing program config."},
-            new HandlerLoggingKeyValuePair() { Name = "FOLDER_SCAN", Message = "There was an issue scanning directories."}
+            new HandlerLoggingKeyValuePair() { Name = "FOLDER_SCAN", Message = "There was an issue find/scanning the source directories."}
 
         };
 
@@ -64,6 +67,14 @@
             new HandlerLoggingKeyValuePair() { Name = "FileArchiverCommand", Message = "Attempting to archive file..."}
         };
 
+        public static IEnumerable<HandlerLoggingKeyValuePair> HandlerErrorMessages = new HandlerLoggingKeyValuePair[]
+{
+            new HandlerLoggingKeyValuePair() { Name = "ConfigCreatorCommand", Message = "Checking for config..."},
+            new HandlerLoggingKeyValuePair() { Name = "ConfigLoaderCommand", Message = "Attempting to load config..."},
+            new HandlerLoggingKeyValuePair() { Name = "FolderScannerCommand", Message = "Starting to scan directories..."},
+            new HandlerLoggingKeyValuePair() { Name = "FileArchiverCommand", Message = "Attempting to archive file..."}
+};
+
         public static string FilePathCreator(string directory, string filePath)
         {
             return System.IO.Path.Combine(directory, filePath).Replace(@"\\", @"\");
@@ -74,6 +85,46 @@
             return $"{SharedContent.TargetDrive}:\\";
         }
 
+        public static string FormatFilePathToDirectoryContext(char drive, string filepath)
+        {
+            return $"{drive}:\\{SharedContent.ArchiveFolderName}\\{filepath}";
+        }
+
+        public static string ReplaceDriveToArchiveContext(char drive, string filepath)
+        {
+            var directoryName = new DirectoryInfo(filepath).Name;
+            var archiveContextPath = $"{drive}:\\{SharedContent.ArchiveFolderName}\\{directoryName}";
+            return new string(archiveContextPath);
+        }
+
+        public static string GetFullArchiveAndFilePath(string filepath)
+        {
+            var fileName = Path.GetFileName(filepath);
+            var drive = SharedContent.DestinationDrive;
+            var archiveFolder = SharedContent.ArchiveFolderName;
+            var archivePath = System.IO.Path.Combine($"{drive}:\\{archiveFolder}", fileName).Replace(@"\\", @"\");
+            return System.IO.Path.Combine($"{drive}:\\{archiveFolder}", fileName).Replace(@"\\", @"\");
+        }
+
+        public static string ReturnErrorMessageForErrorCode(string errorCode)
+        {
+            return SharedContent.ProgramExceptions.Where(y => y.Name == errorCode).Select(y => y.Message).First();
+        }
+
+        public static string ReturnMessageForHandler(string handlerName)
+        {
+            return SharedContent.HandlerLoggingMessages.Where(y => y.Name == handlerName).Select(y => y.Message).First();
+        }
+
+        public static void LogToConsole(string message, bool? includeEndingSpacer = false)
+        {
+            Console.WriteLine(ResponsiveSpacer);
+            Console.WriteLine(message);
+            if (includeEndingSpacer != null || includeEndingSpacer is not false)
+            {
+                Console.WriteLine(ResponsiveSpacer);
+            }
+        }
     }
 
     public class HandlerLoggingKeyValuePair

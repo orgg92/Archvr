@@ -20,7 +20,9 @@
             $"DIRFILELOCATION='{SharedContent.FilePathCreator(SharedContent.ConfigDirectoryPath, "directory-list.txt")}'",
             "OUTPUT_LOCATION=''",
             "CONSOLE_HEIGHT='25'",
-            "CONSOLE_WIDTH='100'"
+            "CONSOLE_WIDTH='100'",
+            "ARCHIVE_FOLDER_NAME='Archive'",
+            "LOG_LEVEL='0'"// this is just the folder name not the full path of desired archive location
         };
 
         public Tuple<string, string>[] ConfigLocations;

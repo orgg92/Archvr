@@ -65,6 +65,7 @@
             SharedContent.OutputLocation = SharedContent.configValues[5];
             SharedContent.ConsoleHeight = int.TryParse(SharedContent.configValues[6], out int ch) ? ch : 25;
             SharedContent.ConsoleWidth = int.TryParse(SharedContent.configValues[7], out int cw) ? cw : 100;
+            SharedContent.ArchiveFolderName = SharedContent.configValues[8];
 
             SetConsoleSize();
 
