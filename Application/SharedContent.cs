@@ -7,15 +7,19 @@
     using System.Text;
     using System.Threading.Tasks;
 
+    // <summary>
+    // a collection of resources and methods that can be used throughout the program
+    // </summary>
+
     public static class SharedContent
     {
-        public static string[] configValues = new string[10];
+        public static IEnumerable<ConfigSetting> configValues;
 
         public static bool LogProgressToConsole;
 
         public static string FilePath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location),
              CurrentPath = AppDomain.CurrentDomain.BaseDirectory,
-             TargetDrive = $"{configValues[0]}",
+             TargetDrive = null,
              DestinationDrive = String.Empty,
              Spacer = "************************************************************** \r\n",
              WelcomeMessage = $"{Spacer} [{DateTime.UtcNow}]: Starting archive process \r\n{Spacer}",
@@ -68,12 +72,12 @@
         };
 
         public static IEnumerable<HandlerLoggingKeyValuePair> HandlerErrorMessages = new HandlerLoggingKeyValuePair[]
-{
+        {
             new HandlerLoggingKeyValuePair() { Name = "ConfigCreatorCommand", Message = "Checking for config..."},
             new HandlerLoggingKeyValuePair() { Name = "ConfigLoaderCommand", Message = "Attempting to load config..."},
             new HandlerLoggingKeyValuePair() { Name = "FolderScannerCommand", Message = "Starting to scan directories..."},
             new HandlerLoggingKeyValuePair() { Name = "FileArchiverCommand", Message = "Attempting to archive file..."}
-};
+        };
 
         public static string FilePathCreator(string directory, string filePath)
         {
@@ -83,11 +87,6 @@
         public static string FormatDriveToStringContext()
         {
             return $"{SharedContent.TargetDrive}:\\";
-        }
-
-        public static string FormatFilePathToDirectoryContext(char drive, string filepath)
-        {
-            return $"{drive}:\\{SharedContent.ArchiveFolderName}\\{filepath}";
         }
 
         public static string ReplaceDriveToArchiveContext(char drive, string filepath)
@@ -106,11 +105,13 @@
             return System.IO.Path.Combine($"{drive}:\\{archiveFolder}", fileName).Replace(@"\\", @"\");
         }
 
+        // returns error message for the specified error code
         public static string ReturnErrorMessageForErrorCode(string errorCode)
         {
             return SharedContent.ProgramExceptions.Where(y => y.Name == errorCode).Select(y => y.Message).First();
         }
 
+        // returns the message to be logged to the console corresponding to the appropriate handler 
         public static string ReturnMessageForHandler(string handlerName)
         {
             return SharedContent.HandlerLoggingMessages.Where(y => y.Name == handlerName).Select(y => y.Message).First();
@@ -139,5 +140,12 @@
         public string ErrorCode { get; set; }
         public string ErrorMessage { get; set; }
     }
+
+    public class ConfigSetting
+    {
+        public string Name { get; set; }
+        public string Value { get; set; }
+    }
+
 
 }

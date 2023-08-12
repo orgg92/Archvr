@@ -64,8 +64,6 @@
 
         public ConfigCreatorResponse WriteNewConfigFile()
         {
-            
-
             for (int i = 0; i < this.ConfigLocations.Length; i++)
             {
                 var filedir = this.ConfigLocations[i].Item1;

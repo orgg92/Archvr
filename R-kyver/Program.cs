@@ -1,4 +1,4 @@
-﻿namespace Rkyver 
+﻿namespace Rkyver
 {
     using Application;
     using Application.Common;
@@ -15,6 +15,16 @@
     public class Program
     {
 
+        public static IMediator _mediator;
+        public static List<string> _lockedFiles;
+
+        public Program(IMediator mediator)
+        {
+            _mediator = mediator;
+            _lockedFiles = new List<string>();
+        }
+
+
         static async Task Main(string[] args)
         {
             var _serviceCollection = new ServiceCollection()
@@ -23,7 +33,7 @@
                  .AddTransient<IMediatorService, MediatorService>()
                  .BuildServiceProvider();
 
-            var _mediator = _serviceCollection.GetService<IMediator>();
+            _mediator = _serviceCollection.GetService<IMediator>();
 
             var configCreation = await _mediator.Send(new ConfigCreatorCommand());
 
@@ -37,46 +47,25 @@
 
                 if (configResult.ConfigLoaded)
                 {
-
                     var result = await _mediator.Send(new FolderScannerCommand());
 
-                    //result.FileList.Select(async x =>
-                    //{
-                    //    var processFile = await _mediator.Send(new FileArchiverCommand() { FileName = x });
+                    await ProcessFileList(result.FileList);
 
-                    //    if (!processFile.ArchiveSuccess)
-                    //    {
-                    //        // add to locked list
-                    //    }
-                    //});
-
-                    foreach(var file in result.FileList)
+                    if (_lockedFiles.Any())
                     {
-                        var processFile = await _mediator.Send(new FileArchiverCommand() { FileName = file });
-
-                        if (!processFile.ArchiveSuccess)
+                        foreach (var file in _lockedFiles)
                         {
-                            // add to locked list
-                        };
+                            var processFile = await _mediator.Send(new FileArchiverCommand() { FileName = file });
+                        }
                     }
-
-
-
-
-                    // try each locked file {
-
-                    // log result... back off... skip over if retry limit reached
-
-                    // }
-
-
-                    // report on skipped files
                 }
+
                 else
                 {
                     Console.WriteLine("There was an issue loading configuration settings... Check config.ini");
                 }
             }
+
             else if (configCreation.ConfigCreated == ConfigCreated.True)
             {
 
@@ -85,10 +74,28 @@
 
 
             }
+        }
 
+        private static async Task ProcessFileList(IEnumerable<string> fileList, bool retryMode = false)
+        {
+            foreach (var file in fileList)
+            {
+                var processFile = await _mediator.Send(new FileArchiverCommand() { FileName = file });
+
+                if (!processFile.ArchiveSuccess && !retryMode)
+                {
+                    // add to locked list
+                    _lockedFiles.Add(file);
+                } else if (!processFile.ArchiveSuccess && retryMode)
+                {
+                    Console.WriteLine($"Archiving file: {file} failed after retrying");
+                }
+
+              
+            }
 
         }
     }
-}
 
+}
 

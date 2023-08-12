@@ -48,24 +48,39 @@
             return Directory.Exists(SharedContent.ConfigDirectoryPath) && Directory.Exists(SharedContent.LogPath);
         }
 
+        public static string SelectConfigValue(string configSetting)
+        {
+            return SharedContent.configValues.Where(x => x.Name == configSetting).First().Value;
+        }
+
         public void LoadConfig()
         {
             int i = 0;
+            List<ConfigSetting> configSettings = new List<ConfigSetting>();
             foreach (string line in System.IO.File.ReadLines($"{SharedContent.ConfigFullPath}"))
             {
-                SharedContent.configValues[i] = line.Split("=")[1].Replace("'", "");
+                var setting = line.Split("=");
+
+                configSettings.Add(new ConfigSetting()
+                {
+                    Name = setting[0],
+                    Value = setting[1].Replace("'", "")
+                });
+
                 i++;
             }
 
-            SharedContent.TargetDrive = SharedContent.configValues[0];
-            SharedContent.DestinationDrive = SharedContent.configValues[1];
-            SharedContent.RetryCount = SharedContent.configValues[2];
-            SharedContent.LogProgressToConsole = Boolean.Parse(SharedContent.configValues[3]);
-            SharedContent.DirListFileLocation = SharedContent.configValues[4];
-            SharedContent.OutputLocation = SharedContent.configValues[5];
-            SharedContent.ConsoleHeight = int.TryParse(SharedContent.configValues[6], out int ch) ? ch : 25;
-            SharedContent.ConsoleWidth = int.TryParse(SharedContent.configValues[7], out int cw) ? cw : 100;
-            SharedContent.ArchiveFolderName = SharedContent.configValues[8];
+            SharedContent.configValues = configSettings.ToArray();
+
+            SharedContent.TargetDrive = SelectConfigValue("TARGET_DRIVE");
+            SharedContent.DestinationDrive = SelectConfigValue("DESTINATION_DRIVE");
+            SharedContent.RetryCount = SelectConfigValue("RETRY_COUNT");
+            SharedContent.LogProgressToConsole = Boolean.Parse(SelectConfigValue("LOG_PROGRESS_TO_CONSOLE"));
+            SharedContent.DirListFileLocation = SelectConfigValue("DIRFILELOCATION");
+            SharedContent.OutputLocation = SelectConfigValue("OUTPUT_LOCATION");
+            SharedContent.ConsoleHeight = int.TryParse(SelectConfigValue("CONSOLE_HEIGHT"), out int ch) ? ch : 25;
+            SharedContent.ConsoleWidth = int.TryParse(SelectConfigValue("CONSOLE_WIDTH"), out int cw) ? cw : 100;
+            SharedContent.ArchiveFolderName = SelectConfigValue("ARCHIVE_FOLDER_NAME");
 
             SetConsoleSize();
 

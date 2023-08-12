@@ -23,9 +23,8 @@
                     fileList.AddRange(Directory.EnumerateFiles(SharedContent.FilePathCreator(SharedContent.FormatDriveToStringContext(), directory)));
                 }
 
-
-
                 return new FolderScannerResponse() { FileList = fileList };
+
             } catch (Exception e)
             {
                 throw new ProgramException() { ErrorCode = "FOLDER_SCAN", ErrorMessage = e.Message };
