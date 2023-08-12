@@ -6,6 +6,7 @@
     using Application.Handlers.ConfigLoader;
     using Application.Handlers.FileArchiver;
     using Application.Handlers.FolderScanner;
+    using Application.Interfaces;
     using Application.Services;
     using MediatR;
     using Microsoft.Extensions.DependencyInjection;
@@ -16,10 +17,16 @@
     {
 
         public static IMediator _mediator;
+        public static IConsoleService _consoleService;
+
         public static List<string> _lockedFiles;
 
-        public Program(IMediator mediator)
+        public Program(
+            IMediator mediator,
+            IConsoleService consoleService
+        )
         {
+            _consoleService = consoleService;
             _mediator = mediator;
             _lockedFiles = new List<string>();
         }
@@ -31,9 +38,12 @@
                  .AddMediatR(AppDomain.CurrentDomain.GetAssemblies())
                  .AddTransient(typeof(IPipelineBehavior<,>), typeof(BaseHandlerPipelineBehaviour<,>))
                  .AddTransient<IMediatorService, MediatorService>()
+                 .AddSingleton<IConsoleService, ConsoleService>()
+                 .AddSingleton<ILoggerService, LoggerService>()
                  .BuildServiceProvider();
 
             _mediator = _serviceCollection.GetService<IMediator>();
+            _consoleService = _serviceCollection.GetService<IConsoleService>();
 
             var configCreation = await _mediator.Send(new ConfigCreatorCommand());
 
@@ -62,14 +72,14 @@
 
                 else
                 {
-                    Console.WriteLine("There was an issue loading configuration settings... Check config.ini");
+                    _consoleService.WriteToConsole("There was an issue loading configuration settings... Check config.ini");
                 }
             }
 
             else if (configCreation.ConfigCreated == ConfigCreated.True)
             {
 
-                Console.WriteLine("Config created but requires user setup");
+                _consoleService.WriteToConsole("Config created but requires user setup");
                 // user needs to setup their config file after creation
 
 
@@ -86,9 +96,16 @@
                 {
                     // add to locked list
                     _lockedFiles.Add(file);
+
                 } else if (!processFile.ArchiveSuccess && retryMode)
                 {
-                    Console.WriteLine($"Archiving file: {file} failed after retrying");
+                    _consoleService.WriteToConsole($"Archiving file: {file} failed after retrying");
+                }
+
+                // remove from final locked list if retry mode and file archive was successful
+                if (retryMode && processFile.ArchiveSuccess)
+                {
+                    _lockedFiles.Remove(file);
                 }
 
               

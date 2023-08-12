@@ -1,4 +1,4 @@
-﻿namespace Application.Services
+﻿namespace Application.Interfaces
 {
     using MediatR;
     using System.Threading;

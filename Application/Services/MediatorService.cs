@@ -1,5 +1,6 @@
 ﻿namespace Application.Services
 {
+    using Application.Interfaces;
     using MediatR;
     using System;
     using System.Collections.Generic;
