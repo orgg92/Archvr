@@ -1,6 +1,7 @@
 ﻿namespace Application.Common
 {
     using Application.Handlers;
+    using Application.Interfaces;
     using MediatR;
     using System;
     using System.Collections.Generic;
@@ -10,6 +11,12 @@
 
     public class BaseHandlerPipelineBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : MediatR.IRequest<TResponse> 
     {
+        private readonly IConsoleService _consoleService;
+
+        public BaseHandlerPipelineBehaviour(IConsoleService consoleService)
+        {
+            _consoleService = consoleService;
+                    }
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
             // find the logging announcement and write to console
@@ -19,7 +26,7 @@
             try
             {
                 
-                SharedContent.LogToConsole(SharedContent.ReturnMessageForHandler(handlerName));
+                _consoleService.WriteToConsole($"[{DateTime.UtcNow.ToString("MM/dd/yyyy HH:mm")}] {SharedContent.ReturnMessageForHandler(handlerName)}");
 
                 var response = await next();
 
@@ -28,7 +35,7 @@
             // in all handlers throw a ProgramException so that all exceptions produce an error code and a corresponding console message
             catch (ProgramException e)
             {
-                SharedContent.LogToConsole(SharedContent.ReturnErrorMessageForErrorCode(e.ErrorCode), true);
+                _consoleService.WriteToConsole($"[{DateTime.UtcNow.ToString("MM/dd/yyyy HH:mm")}] {SharedContent.ReturnErrorMessageForErrorCode(e.ErrorCode)}");
                 throw e;
             }
         }

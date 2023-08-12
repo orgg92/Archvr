@@ -34,6 +34,11 @@
 
         static async Task Main(string[] args)
         {
+
+            Console.Clear();
+
+            _lockedFiles = new List<string>();
+
             var _serviceCollection = new ServiceCollection()
                  .AddMediatR(AppDomain.CurrentDomain.GetAssemblies())
                  .AddTransient(typeof(IPipelineBehavior<,>), typeof(BaseHandlerPipelineBehaviour<,>))
@@ -44,6 +49,12 @@
 
             _mediator = _serviceCollection.GetService<IMediator>();
             _consoleService = _serviceCollection.GetService<IConsoleService>();
+
+
+            SharedContent.ConsoleWidth = Console.WindowWidth;
+            SharedContent.ResponsiveSpacer = new String('*', SharedContent.ConsoleWidth);
+
+            _consoleService.WriteToConsole(SharedContent.ResponsiveSpacer);
 
             var configCreation = await _mediator.Send(new ConfigCreatorCommand());
 

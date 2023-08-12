@@ -13,7 +13,7 @@
 
         public LoggerService()
         {
-            LogFilePath = SharedContent.LogPath + "\\" + SharedContent.LogName;
+            LogFilePath = SharedContent.LogName;
         }
 
         public async Task WriteConsoleMessageToLogFile(string textString)

@@ -39,7 +39,7 @@
 
             } catch (Exception e)
             {
-                var exception = new ProgramException() { ErrorCode = "ArchiveError", ErrorMessage = "There was an error" };
+                var exception = new ProgramException() { ErrorCode = "ArchiveError", ErrorMessage = $"There was an error while archiving file: {request.FileName}" };
 
                 return new FileArchiverResponse() { ArchiveSuccess = false, HandlerException = exception };    
             }
