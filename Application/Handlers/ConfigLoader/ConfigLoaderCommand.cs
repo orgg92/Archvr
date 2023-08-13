@@ -95,7 +95,10 @@
 
         public void SetConsoleSize()
         {
-            Console.SetWindowSize(SharedContent.ConsoleWidth, SharedContent.ConsoleHeight);
+            if (System.Environment.OSVersion.Platform.ToString().ToLower().Contains("Win"))
+            {
+                Console.SetWindowSize(SharedContent.ConsoleWidth, SharedContent.ConsoleHeight);
+            }
         }
     }
 }
