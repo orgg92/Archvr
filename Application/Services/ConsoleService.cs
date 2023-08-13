@@ -22,9 +22,10 @@
             // Console.WriteLine()
         }
 
-        public void WriteToConsole(string textString)
+        public async Task WriteToConsole(string textString)
         {
             Console.WriteLine(textString);
+            await WriteToLogFile(textString);
         }
 
         public string GetUserInput()
@@ -32,9 +33,9 @@
             return Console.ReadLine();
         }
 
-        public void WriteToLogFile(string textString)
+        public async Task WriteToLogFile(string textString)
         {
-            _loggerService.WriteConsoleMessageToLogFile(textString);
+           await _loggerService.WriteConsoleMessageToLogFile(textString);
         }
 
     }

@@ -54,7 +54,7 @@
             SharedContent.ConsoleWidth = Console.WindowWidth;
             SharedContent.ResponsiveSpacer = new String('*', SharedContent.ConsoleWidth);
 
-            _consoleService.WriteToConsole(SharedContent.ResponsiveSpacer);
+            await _consoleService.WriteToConsole(SharedContent.ResponsiveSpacer);
 
             var configCreation = await _mediator.Send(new ConfigCreatorCommand());
 
@@ -83,14 +83,14 @@
 
                 else
                 {
-                    _consoleService.WriteToConsole("There was an issue loading configuration settings... Check config.ini");
+                    await _consoleService.WriteToConsole("There was an issue loading configuration settings... Check config.ini");
                 }
             }
 
             else if (configCreation.ConfigCreated == ConfigCreated.True)
             {
 
-                _consoleService.WriteToConsole("Config created but requires user setup");
+                await _consoleService.WriteToConsole("Config created but requires user setup");
                 // user needs to setup their config file after creation
 
 
@@ -99,9 +99,13 @@
 
         private static async Task ProcessFileList(IEnumerable<string> fileList, bool retryMode = false)
         {
+            var i = 0;
+
+            await _consoleService.WriteToConsole($"[{DateTime.UtcNow.ToString("MM/dd/yyyy HH:mm")}] {SharedContent.ReturnMessageForHandler(HandlerNames.FileArchiverCommand.ToString())}");
+
             foreach (var file in fileList)
             {
-                var processFile = await _mediator.Send(new FileArchiverCommand() { FileName = file });
+                var processFile = await _mediator.Send(new FileArchiverCommand() { FileName = file, FileNumber = i+1, TotalFiles = fileList.Count() } ) ;
 
                 if (!processFile.ArchiveSuccess && !retryMode)
                 {
@@ -110,7 +114,7 @@
 
                 } else if (!processFile.ArchiveSuccess && retryMode)
                 {
-                    _consoleService.WriteToConsole($"Archiving file: {file} failed after retrying");
+                    await _consoleService.WriteToConsole($"Archiving file: {file} failed after retrying");
                 }
 
                 // remove from final locked list if retry mode and file archive was successful
@@ -119,7 +123,7 @@
                     _lockedFiles.Remove(file);
                 }
 
-              
+                i++;
             }
 
         }

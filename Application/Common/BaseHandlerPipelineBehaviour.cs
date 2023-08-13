@@ -1,6 +1,7 @@
 ﻿namespace Application.Common
 {
     using Application.Handlers;
+    using Application.Handlers.FileArchiver;
     using Application.Interfaces;
     using MediatR;
     using System;
@@ -16,7 +17,8 @@
         public BaseHandlerPipelineBehaviour(IConsoleService consoleService)
         {
             _consoleService = consoleService;
-                    }
+        }
+
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
             // find the logging announcement and write to console
@@ -25,8 +27,15 @@
 
             try
             {
-                
-                _consoleService.WriteToConsole($"[{DateTime.UtcNow.ToString("MM/dd/yyyy HH:mm")}] {SharedContent.ReturnMessageForHandler(handlerName)}");
+                // if request is to archive a file do not announce message in pipeline
+
+                if (handlerName != HandlerNames.FileArchiverCommand.ToString())
+                {
+                    var handlerMessage = SharedContent.ReturnMessageForHandler(handlerName);
+                    await _consoleService.WriteToConsole($"[{DateTime.UtcNow.ToString("MM/dd/yyyy HH:mm")}] {handlerMessage}");
+                }
+
+
 
                 var response = await next();
 
@@ -35,7 +44,7 @@
             // in all handlers throw a ProgramException so that all exceptions produce an error code and a corresponding console message
             catch (ProgramException e)
             {
-                _consoleService.WriteToConsole($"[{DateTime.UtcNow.ToString("MM/dd/yyyy HH:mm")}] {SharedContent.ReturnErrorMessageForErrorCode(e.ErrorCode)}");
+                await _consoleService.WriteToConsole($"[{DateTime.UtcNow.ToString("MM/dd/yyyy HH:mm")}] {SharedContent.ReturnErrorMessageForErrorCode(e.ErrorCode.ToString())}");
                 throw e;
             }
         }

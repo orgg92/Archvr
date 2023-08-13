@@ -1,19 +1,31 @@
 ﻿namespace Application.Handlers.FileArchiver
 {
+    using Application.Interfaces;
     using MediatR;
 
     public class FileArchiverCommand : IRequest<FileArchiverResponse>
     {
         public string FileName { get; set; }
         public bool? IsRetry { get; set; }
+        public int FileNumber { get; set; }
+        public int TotalFiles { get; set; }
     }
 
     public class FileArchiverHandler : IRequestHandler<FileArchiverCommand, FileArchiverResponse>
     {
+        private readonly IConsoleService _consoleService;
+
+        public FileArchiverHandler(IConsoleService consoleService)
+        {
+            _consoleService = consoleService;
+        }
+
         public async Task<FileArchiverResponse> Handle(FileArchiverCommand request, CancellationToken cancellationToken)
         {
             try
             {
+                await _consoleService.WriteToConsole($"{new String('-', 17)}> {request.FileName} ({request.FileNumber} of {request.TotalFiles})");
+
                 // if SOURCE VERSION OF THE DESTINATION FILE doesn't exist
                 // OR
                 // the DESTINATION FILE last modified is before the SOURCE FILE'S last modified
@@ -39,7 +51,7 @@
 
             } catch (Exception e)
             {
-                var exception = new ProgramException() { ErrorCode = "ArchiveError", ErrorMessage = $"There was an error while archiving file: {request.FileName}" };
+                var exception = new ProgramException() { ErrorCode = ErrorCodes.ARCHIVE_ERROR, ErrorMessage = $"There was an error while archiving file: {request.FileName}" };
 
                 return new FileArchiverResponse() { ArchiveSuccess = false, HandlerException = exception };    
             }

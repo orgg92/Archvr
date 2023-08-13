@@ -31,7 +31,7 @@
                 }
             } catch (Exception e)
             {
-                throw new ProgramException() { ErrorCode = "CONFIG_LOAD_ERROR", ErrorMessage = e.Message };
+                throw new ProgramException() { ErrorCode = ErrorCodes.CONFIG_LOAD_ERROR, ErrorMessage = e.Message };
             }
 
 

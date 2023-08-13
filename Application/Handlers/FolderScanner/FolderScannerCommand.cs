@@ -27,7 +27,7 @@
 
             } catch (Exception e)
             {
-                throw new ProgramException() { ErrorCode = "FOLDER_SCAN", ErrorMessage = e.Message };
+                throw new ProgramException() { ErrorCode = ErrorCodes.FOLDER_SCAN, ErrorMessage = e.Message };
             }
         }
     }

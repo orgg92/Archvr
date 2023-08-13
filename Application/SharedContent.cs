@@ -55,28 +55,28 @@
 
         public static IEnumerable<HandlerLoggingKeyValuePair> ProgramExceptions = new HandlerLoggingKeyValuePair[]
         {
-            new HandlerLoggingKeyValuePair() { Name = "CONFIG_PARSE", Message = "There was an issue loading config." },
-            new HandlerLoggingKeyValuePair() { Name = "FILE_LOCK", Message = "A file was locked for too long." },
-            new HandlerLoggingKeyValuePair() { Name = "CONFIG_CREATION_ERROR", Message = "There was an issue creating program config."},
-            new HandlerLoggingKeyValuePair() { Name = "CONFIG_LOAD_ERROR", Message = "There was an issue parsing program config."},
-            new HandlerLoggingKeyValuePair() { Name = "FOLDER_SCAN", Message = "There was an issue find/scanning the source directories."}
+            new HandlerLoggingKeyValuePair() { Key = "CONFIG_PARSE", Value = "There was an issue loading config." },
+            new HandlerLoggingKeyValuePair() { Key = "FILE_LOCK", Value = "A file was locked for too long." },
+            new HandlerLoggingKeyValuePair() { Key = "CONFIG_CREATION_ERROR", Value = "There was an issue creating program config."},
+            new HandlerLoggingKeyValuePair() { Key = "CONFIG_LOAD_ERROR", Value = "There was an issue parsing program config."},
+            new HandlerLoggingKeyValuePair() { Key = "FOLDER_SCAN", Value = "There was an issue find/scanning the source directories."}
 
         };
 
         public static IEnumerable<HandlerLoggingKeyValuePair> HandlerLoggingMessages = new HandlerLoggingKeyValuePair[]
         {
-            new HandlerLoggingKeyValuePair() { Name = "ConfigCreatorCommand", Message = "Checking for config..."},
-            new HandlerLoggingKeyValuePair() { Name = "ConfigLoaderCommand", Message = "Attempting to load config..."},
-            new HandlerLoggingKeyValuePair() { Name = "FolderScannerCommand", Message = "Starting to scan directories..."},
-            new HandlerLoggingKeyValuePair() { Name = "FileArchiverCommand", Message = "Attempting to archive file..."}
+            new HandlerLoggingKeyValuePair() { Key = "ConfigCreatorCommand", Value = "Checking for config..."},
+            new HandlerLoggingKeyValuePair() { Key = "ConfigLoaderCommand", Value = "Attempting to load config..."},
+            new HandlerLoggingKeyValuePair() { Key = "FolderScannerCommand", Value = "Starting to scan directories..."},
+            new HandlerLoggingKeyValuePair() { Key = "FileArchiverCommand", Value = "Attempting to archive file..."}
         };
 
         public static IEnumerable<HandlerLoggingKeyValuePair> HandlerErrorMessages = new HandlerLoggingKeyValuePair[]
         {
-            new HandlerLoggingKeyValuePair() { Name = "ConfigCreatorCommand", Message = "Checking for config..."},
-            new HandlerLoggingKeyValuePair() { Name = "ConfigLoaderCommand", Message = "Attempting to load config..."},
-            new HandlerLoggingKeyValuePair() { Name = "FolderScannerCommand", Message = "Starting to scan directories..."},
-            new HandlerLoggingKeyValuePair() { Name = "FileArchiverCommand", Message = "Attempting to archive file..."}
+            new HandlerLoggingKeyValuePair() { Key = "ConfigCreatorCommand", Value = "Checking for config..."},
+            new HandlerLoggingKeyValuePair() { Key = "ConfigLoaderCommand", Value = "Attempting to load config..."},
+            new HandlerLoggingKeyValuePair() { Key = "FolderScannerCommand", Value = "Starting to scan directories..."},
+            new HandlerLoggingKeyValuePair() { Key = "FileArchiverCommand", Value = "Attempting to archive file..."}
         };
 
         public static string FilePathCreator(string directory, string filePath)
@@ -108,13 +108,13 @@
         // returns error message for the specified error code
         public static string ReturnErrorMessageForErrorCode(string errorCode)
         {
-            return SharedContent.ProgramExceptions.Where(y => y.Name == errorCode).Select(y => y.Message).First();
+            return SharedContent.ProgramExceptions.Where(y => y.Key == errorCode).Select(y => y.Value).First();
         }
 
         // returns the message to be logged to the console corresponding to the appropriate handler 
         public static string ReturnMessageForHandler(string handlerName)
         {
-            return SharedContent.HandlerLoggingMessages.Where(y => y.Name == handlerName).Select(y => y.Message).First();
+            return SharedContent.HandlerLoggingMessages.Where(y => y.Key == handlerName).Select(y => y.Value).First();
         }
 
         public static void LogToConsole(string message, bool? includeEndingSpacer = false)
@@ -130,14 +130,14 @@
 
     public class HandlerLoggingKeyValuePair
     {
-        public string Name { get; set; }
-        public string Message { get; set; }
+        public string Key { get; set; }
+        public string Value { get; set; }
     }
 
 
     public class ProgramException : Exception
     {
-        public string ErrorCode { get; set; }
+        public ErrorCodes ErrorCode { get; set; }
         public string ErrorMessage { get; set; }
     }
 
@@ -145,6 +145,22 @@
     {
         public string Name { get; set; }
         public string Value { get; set; }
+    }
+
+    public enum HandlerNames
+    {
+        ConfigCreatorCommand,
+        ConfigLoaderCommand,
+        FileArchiverCommand,
+        FolderScannerCommand
+    }
+
+    public enum ErrorCodes
+    {
+        CONFIG_CREATION_ERROR,
+        CONFIG_LOAD_ERROR,
+        ARCHIVE_ERROR,
+        FOLDER_SCAN
     }
 
 

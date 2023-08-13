@@ -21,8 +21,8 @@
             "OUTPUT_LOCATION=''",
             "CONSOLE_HEIGHT='25'",
             "CONSOLE_WIDTH='100'",
-            "ARCHIVE_FOLDER_NAME='Archive'",
-            "LOG_LEVEL='0'"// this is just the folder name not the full path of desired archive location
+            "ARCHIVE_FOLDER_NAME='Archive'", // this is just the folder name not the full path of desired archive location
+            "LOG_LEVEL='0'" // 0-3
         };
 
         public Tuple<string, string>[] ConfigLocations;
@@ -52,7 +52,7 @@
 
             } catch (Exception e)
             {
-                throw new ProgramException() { ErrorCode = "CONFIG_CREATION_ERROR", ErrorMessage = e.Message };
+                throw new ProgramException() { ErrorCode = ErrorCodes.CONFIG_CREATION_ERROR, ErrorMessage = e.Message };
             }
 
         }
@@ -69,7 +69,7 @@
                 var filedir = this.ConfigLocations[i].Item1;
                 var filePath = this.ConfigLocations[i].Item2;
 
-                // if directory doesn't exist, create it, if file doesn't exist create that too
+                // if directory doesn't exist, create it, if file doesn't exist create that too - this ensures all prerequisite files are created on startup
                 if (!Directory.Exists(filedir))
                 {
                     Directory.CreateDirectory(filedir);
