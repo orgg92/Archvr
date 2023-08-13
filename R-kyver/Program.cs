@@ -95,6 +95,8 @@
 
 
             }
+
+            await _consoleService.WriteToConsole(SharedContent.ResponsiveSpacer);
         }
 
         private static async Task ProcessFileList(IEnumerable<string> fileList, bool retryMode = false)

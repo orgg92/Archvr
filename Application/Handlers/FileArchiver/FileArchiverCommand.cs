@@ -24,7 +24,11 @@
         {
             try
             {
-                await _consoleService.WriteToConsole($"{new String('-', 17)}> {request.FileName} ({request.FileNumber} of {request.TotalFiles})");
+                var fileProgressMeter = $"[{request.FileNumber} of {request.TotalFiles}]";
+
+                var message = $"{fileProgressMeter} {new String('-',16 - fileProgressMeter.Count())}> {request.FileName}";
+
+                await _consoleService.WriteToConsole(message);
 
                 // if SOURCE VERSION OF THE DESTINATION FILE doesn't exist
                 // OR
