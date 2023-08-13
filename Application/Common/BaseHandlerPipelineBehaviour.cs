@@ -10,6 +10,12 @@
     using System.Text;
     using System.Threading.Tasks;
 
+    /// <summary>
+    /// announces messages to console and log file and handles exceptions 
+    /// </summary>
+    /// <typeparam name="TRequest"></typeparam>
+    /// <typeparam name="TResponse"></typeparam>
+    
     public class BaseHandlerPipelineBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : MediatR.IRequest<TResponse> 
     {
         private readonly IConsoleService _consoleService;
@@ -28,23 +34,21 @@
             try
             {
                 // if request is to archive a file do not announce message in pipeline
-
                 if (handlerName != HandlerNames.FileArchiverCommand.ToString())
                 {
                     var handlerMessage = SharedContent.ReturnMessageForHandler(handlerName);
-                    await _consoleService.WriteToConsole($"[{DateTime.UtcNow.ToString("MM/dd/yyyy HH:mm")}] {handlerMessage}");
+                    await _consoleService.WriteToConsole($"{SharedContent.ReturnFormattedDateTimeToString()} {handlerMessage}");
                 }
-
-
 
                 var response = await next();
 
                 return response;
             }
-            // in all handlers throw a ProgramException so that all exceptions produce an error code and a corresponding console message
+
+            // catch all ProgramExceptions to retrieve the corresponding error code message for user
             catch (ProgramException e)
             {
-                await _consoleService.WriteToConsole($"[{DateTime.UtcNow.ToString("MM/dd/yyyy HH:mm")}] {SharedContent.ReturnErrorMessageForErrorCode(e.ErrorCode.ToString())}");
+                await _consoleService.WriteToConsole($"{SharedContent.ReturnFormattedDateTimeToString()} {SharedContent.ReturnErrorMessageForErrorCode(e.ErrorCode.ToString())}");
                 throw e;
             }
         }

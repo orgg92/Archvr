@@ -5,15 +5,11 @@
 
     public class ConfigLoaderCommand : IRequest<ConfigLoaderResponse>
     {
-
+        // no data required to load config
     }
 
     public class ConfigLoaderHandler : IRequestHandler<ConfigLoaderCommand, ConfigLoaderResponse>
     {
-        public ConfigLoaderHandler()
-        {
-
-        }
 
         public async Task<ConfigLoaderResponse> Handle(ConfigLoaderCommand request, CancellationToken cancellationToken)
         {
@@ -37,7 +33,7 @@
 
         }
 
-        //check file has been modified since it's creation, otherwise the file will only contain the default config template so no point loading
+        //check file has been modified since it's creation, otherwise the file will only contain default config template so no point trying to load
         public bool CheckConfigHasBeenTouched()
         {
             return File.GetCreationTimeUtc(SharedContent.ConfigFullPath) != File.GetLastWriteTimeUtc(SharedContent.ConfigFullPath);
@@ -70,12 +66,13 @@
                 i++;
             }
 
+            // set global values for use throughout the application
             SharedContent.configValues = configSettings.ToArray();
 
             SharedContent.TargetDrive = SelectConfigValue("TARGET_DRIVE");
             SharedContent.DestinationDrive = SelectConfigValue("DESTINATION_DRIVE");
             SharedContent.RetryCount = SelectConfigValue("RETRY_COUNT");
-            SharedContent.LogProgressToConsole = Boolean.Parse(SelectConfigValue("LOG_PROGRESS_TO_CONSOLE"));
+            SharedContent.LogProgressToConsole = Boolean.TryParse(SelectConfigValue("LOG_PROGRESS_TO_CONSOLE"), out var result) ? result : false;
             SharedContent.DirListFileLocation = SelectConfigValue("DIRFILELOCATION");
             SharedContent.OutputLocation = SelectConfigValue("OUTPUT_LOCATION");
             SharedContent.ConsoleHeight = int.TryParse(SelectConfigValue("CONSOLE_HEIGHT"), out int ch) ? ch : 25;

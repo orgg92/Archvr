@@ -24,9 +24,9 @@
         {
             try
             {
-                var fileProgressMeter = $"[{request.FileNumber} of {request.TotalFiles}]";
+                var fileProgressMeter = $"[{request.FileNumber}/{request.TotalFiles}]";
 
-                var message = $"{fileProgressMeter} {new String('-',16 - fileProgressMeter.Count())}> {request.FileName}";
+                var message = $"{fileProgressMeter} {new String('-',25 - fileProgressMeter.Count())}> {request.FileName}";
 
                 await _consoleService.WriteToConsole(message);
 

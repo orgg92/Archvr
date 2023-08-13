@@ -126,6 +126,11 @@
                 Console.WriteLine(ResponsiveSpacer);
             }
         }
+
+        public static string ReturnFormattedDateTimeToString()
+        {
+            return $"[{DateTime.UtcNow.ToString("MM/dd/yyyy HH:mm")}]";
+        }
     }
 
     public class HandlerLoggingKeyValuePair

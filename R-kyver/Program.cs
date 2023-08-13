@@ -96,14 +96,14 @@
 
             }
 
-            await _consoleService.WriteToConsole(SharedContent.ResponsiveSpacer);
+            await _consoleService.WriteToConsole("\r\n" + SharedContent.ResponsiveSpacer);
         }
 
         private static async Task ProcessFileList(IEnumerable<string> fileList, bool retryMode = false)
         {
             var i = 0;
 
-            await _consoleService.WriteToConsole($"[{DateTime.UtcNow.ToString("MM/dd/yyyy HH:mm")}] {SharedContent.ReturnMessageForHandler(HandlerNames.FileArchiverCommand.ToString())}");
+            await _consoleService.WriteToConsole($"[{DateTime.UtcNow.ToString("MM/dd/yyyy HH:mm")}] {SharedContent.ReturnMessageForHandler(HandlerNames.FileArchiverCommand.ToString())} \r\n");
 
             foreach (var file in fileList)
             {
