@@ -19,10 +19,10 @@
 
         public static string FilePath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location),
              CurrentPath = AppDomain.CurrentDomain.BaseDirectory,
-             TargetDrive = null,
+             TargetDrive = String.Empty,
              DestinationDrive = String.Empty,
              Spacer = "************************************************************** \r\n",
-             WelcomeMessage = $"{Spacer} [{DateTime.UtcNow}]: Starting archive process \r\n{Spacer}",
+             WelcomeMessage = $"{Spacer} {SharedContent.ReturnFormattedDateTimeToString()}: Starting archive process \r\n{Spacer}",
              LogPath = FilePathCreator(CurrentPath, "Logs\\"),
              LogName = FilePathCreator(LogPath, "logfile.log"),
              ConfigDirectoryPath = FilePathCreator(CurrentPath, "Config\\"),
@@ -57,6 +57,7 @@
         {
             new HandlerLoggingKeyValuePair() { Key = "CONFIG_PARSE", Value = "There was an issue loading config." },
             new HandlerLoggingKeyValuePair() { Key = "FILE_LOCK", Value = "A file was locked for too long." },
+            new HandlerLoggingKeyValuePair() { Key = "ARCHIVE_ERROR", Value = "An error occurred while trying to archive file: {0}" },
             new HandlerLoggingKeyValuePair() { Key = "CONFIG_CREATION_ERROR", Value = "There was an issue creating program config."},
             new HandlerLoggingKeyValuePair() { Key = "CONFIG_LOAD_ERROR", Value = "There was an issue parsing program config."},
             new HandlerLoggingKeyValuePair() { Key = "FOLDER_SCAN", Value = "There was an issue find/scanning the source directories."}
@@ -68,7 +69,7 @@
             new HandlerLoggingKeyValuePair() { Key = "ConfigCreatorCommand", Value = "Checking for config..."},
             new HandlerLoggingKeyValuePair() { Key = "ConfigLoaderCommand", Value = "Attempting to load config..."},
             new HandlerLoggingKeyValuePair() { Key = "FolderScannerCommand", Value = "Starting to scan directories..."},
-            new HandlerLoggingKeyValuePair() { Key = "FileArchiverCommand", Value = "Attempting to archive file..."}
+            new HandlerLoggingKeyValuePair() { Key = "FileArchiverCommand", Value = "Attempting to archive files..."}
         };
 
         public static IEnumerable<HandlerLoggingKeyValuePair> HandlerErrorMessages = new HandlerLoggingKeyValuePair[]
@@ -76,7 +77,7 @@
             new HandlerLoggingKeyValuePair() { Key = "ConfigCreatorCommand", Value = "Checking for config..."},
             new HandlerLoggingKeyValuePair() { Key = "ConfigLoaderCommand", Value = "Attempting to load config..."},
             new HandlerLoggingKeyValuePair() { Key = "FolderScannerCommand", Value = "Starting to scan directories..."},
-            new HandlerLoggingKeyValuePair() { Key = "FileArchiverCommand", Value = "Attempting to archive file..."}
+            new HandlerLoggingKeyValuePair() { Key = "FileArchiverCommand", Value = "An error occurred while trying to archive file: {0}"}
         };
 
         public static string FilePathCreator(string directory, string filePath)
@@ -117,16 +118,6 @@
             return SharedContent.HandlerLoggingMessages.Where(y => y.Key == handlerName).Select(y => y.Value).First();
         }
 
-        public static void LogToConsole(string message, bool? includeEndingSpacer = false)
-        {
-            Console.WriteLine(ResponsiveSpacer);
-            Console.WriteLine(message);
-            if (includeEndingSpacer != null || includeEndingSpacer is not false)
-            {
-                Console.WriteLine(ResponsiveSpacer);
-            }
-        }
-
         public static string ReturnFormattedDateTimeToString()
         {
             return $"[{DateTime.UtcNow.ToString("MM/dd/yyyy HH:mm")}]";
@@ -139,11 +130,10 @@
         public string Value { get; set; }
     }
 
-
     public class ProgramException : Exception
     {
         public ErrorCodes ErrorCode { get; set; }
-        public string ErrorMessage { get; set; }
+        public string  ErrorMessage { get; set; }
     }
 
     public class ConfigSetting

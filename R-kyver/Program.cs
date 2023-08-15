@@ -103,7 +103,7 @@
         {
             var i = 0;
 
-            await _consoleService.WriteToConsole($"[{DateTime.UtcNow.ToString("MM/dd/yyyy HH:mm")}] {SharedContent.ReturnMessageForHandler(HandlerNames.FileArchiverCommand.ToString())} \r\n");
+            await _consoleService.WriteToConsole($"{SharedContent.ReturnFormattedDateTimeToString()} {SharedContent.ReturnMessageForHandler(HandlerNames.FileArchiverCommand.ToString())} \r\n");
 
             foreach (var file in fileList)
             {

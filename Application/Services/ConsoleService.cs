@@ -17,11 +17,6 @@
             _loggerService = loggerService;
         }
 
-        public void PrintLineDecoration()
-        {
-            // Console.WriteLine()
-        }
-
         public async Task WriteToConsole(string textString)
         {
             Console.WriteLine(textString);

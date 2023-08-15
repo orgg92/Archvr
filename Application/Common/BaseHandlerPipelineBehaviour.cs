@@ -48,7 +48,9 @@
             // catch all ProgramExceptions to retrieve the corresponding error code message for user
             catch (ProgramException e)
             {
-                await _consoleService.WriteToConsole($"{SharedContent.ReturnFormattedDateTimeToString()} {SharedContent.ReturnErrorMessageForErrorCode(e.ErrorCode.ToString())}");
+                await _consoleService.WriteToConsole
+                    ($"{SharedContent.ReturnFormattedDateTimeToString()} {SharedContent.ReturnErrorMessageForErrorCode(e.ErrorCode.ToString())}");
+
                 throw e;
             }
         }

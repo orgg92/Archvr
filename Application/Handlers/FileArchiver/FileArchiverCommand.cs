@@ -55,7 +55,7 @@
 
             } catch (Exception e)
             {
-                var exception = new ProgramException() { ErrorCode = ErrorCodes.ARCHIVE_ERROR, ErrorMessage = $"There was an error while archiving file: {request.FileName}" };
+                var exception = new ProgramException() { ErrorCode = ErrorCodes.ARCHIVE_ERROR, ErrorMessage = SharedContent.ReturnErrorMessageForErrorCode(ErrorCodes.ARCHIVE_ERROR.ToString()).Replace("{0}", request.FileName ) };
 
                 return new FileArchiverResponse() { ArchiveSuccess = false, HandlerException = exception };    
             }
