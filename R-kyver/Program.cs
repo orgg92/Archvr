@@ -10,6 +10,7 @@
     using Application.Services;
     using MediatR;
     using Microsoft.Extensions.DependencyInjection;
+    using Ryker;
     using System;
     using System.Reflection;
 
@@ -29,27 +30,35 @@
             _consoleService = consoleService;
             _mediator = mediator;
             _lockedFiles = new List<string>();
+
+            Initialize();
+        }
+
+        public static void Initialize()
+        {
+            IServiceCollection services = new ServiceCollection();
+
+            Startup startup = new Startup();
+            startup.ConfigureServices(services);
+            IServiceProvider serviceProvider = services.BuildServiceProvider();
+
+
+            _consoleService = serviceProvider
+                .GetService<IConsoleService>();
+
+            _mediator = serviceProvider
+                .GetService<IMediator>();
+
+            _lockedFiles = new List<string>();
         }
 
 
         static async Task Main(string[] args)
         {
 
+            Initialize();
+                
             Console.Clear();
-
-            _lockedFiles = new List<string>();
-
-            var _serviceCollection = new ServiceCollection()
-                 .AddMediatR(AppDomain.CurrentDomain.GetAssemblies())
-                 .AddTransient(typeof(IPipelineBehavior<,>), typeof(BaseHandlerPipelineBehaviour<,>))
-                 .AddTransient<IMediatorService, MediatorService>()
-                 .AddSingleton<IConsoleService, ConsoleService>()
-                 .AddSingleton<ILoggerService, LoggerService>()
-                 .BuildServiceProvider();
-
-            _mediator = _serviceCollection.GetService<IMediator>();
-            _consoleService = _serviceCollection.GetService<IConsoleService>();
-
 
             SharedContent.ConsoleWidth = Console.WindowWidth;
             SharedContent.ResponsiveSpacer = new String('*', SharedContent.ConsoleWidth);
