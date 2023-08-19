@@ -10,10 +10,11 @@
 
     public class Startup
     {
-        IConfigurationRoot Configuration { get; }
+        IConfiguration Configuration { get; }
 
-        public Startup()
+        public Startup(IConfiguration configuration)
         {
+            Configuration = configuration;
             var builder = new ConfigurationBuilder();
             //.AddJsonFile("appsettings.json");
 
@@ -24,12 +25,18 @@
         {
             //services.AddLogging();
             services
-                .AddSingleton<IConfigurationRoot>(Configuration)
-                .AddMediatR(AppDomain.CurrentDomain.GetAssemblies())
+                .AddSingleton<IConfiguration>(Configuration)
                 .AddTransient(typeof(IPipelineBehavior<,>), typeof(BaseHandlerPipelineBehaviour<,>))
+                .AddMediatR(AppDomain.CurrentDomain.GetAssemblies())
                 .AddTransient<ILoggerService, LoggerService>()
                 .AddTransient<IConsoleService, ConsoleService>();
-
         }
+
+        public void RegisterPipelines(IServiceCollection services)
+        {
+            services
+                .AddTransient(typeof(IPipelineBehavior<,>), typeof(BaseHandlerPipelineBehaviour<,>));
+        }
+
     }
 }

@@ -9,6 +9,7 @@
     using Application.Interfaces;
     using Application.Services;
     using MediatR;
+    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Ryker;
     using System;
@@ -36,9 +37,12 @@
 
         public static void Initialize()
         {
+            var config = new ConfigurationBuilder()
+                .Build();
+
             IServiceCollection services = new ServiceCollection();
 
-            Startup startup = new Startup();
+            Startup startup = new Startup(config);
             startup.ConfigureServices(services);
             IServiceProvider serviceProvider = services.BuildServiceProvider();
 
