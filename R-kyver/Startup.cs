@@ -3,6 +3,8 @@
     using Application.Common;
     using Application.Interfaces;
     using Application.Services;
+    using archiver.Application.Interfaces;
+    using archiver.Application.Services;
     using MediatR;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -28,6 +30,7 @@
                 .AddSingleton<IConfiguration>(Configuration)
                 .AddTransient(typeof(IPipelineBehavior<,>), typeof(BaseHandlerPipelineBehaviour<,>))
                 .AddMediatR(AppDomain.CurrentDomain.GetAssemblies())
+                .AddTransient<IConfigCreatorService, ConfigCreatorService>()
                 .AddTransient<ILoggerService, LoggerService>()
                 .AddTransient<IConsoleService, ConsoleService>();
         }

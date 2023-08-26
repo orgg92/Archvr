@@ -27,8 +27,6 @@
 
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
-            // find the logging announcement and write to console
-
             var handlerName = typeof(TRequest).Name;
 
             try
@@ -36,6 +34,7 @@
                 // if request is to archive a file do not announce message in pipeline
                 if (handlerName != HandlerNames.FileArchiverCommand.ToString())
                 {
+                    // find the logging announcement and write to console
                     var handlerMessage = SharedContent.ReturnMessageForHandler(handlerName);
                     await _consoleService.WriteToConsole($"{SharedContent.ReturnFormattedDateTimeToString()} {handlerMessage}");
                 }

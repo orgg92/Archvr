@@ -1,48 +1,55 @@
 namespace archiver.Application.Tests
 {
+    using archiver.Application.Interfaces;
+    using global::Application;
     using global::Application.Interfaces;
     using global::Application.Services;
     using MediatR;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Moq;
     using NSubstitute;
+    using NSubstitute.Extensions;
     using Ryker;
 
     [TestClass]
     public class TestRoot
     {
-        private IConsoleService _consoleService;
-        private ILoggerService _loggerService;
 
         public Startup startup;
+        public IServiceProvider _services;
 
-        [TestInitialize]
-        public void Start()
+        public TestRoot()
         {
-            var config = new ConfigurationBuilder()
-                            .Build();
+            //var config = new ConfigurationBuilder()
+            //    .Build();
 
-            IServiceCollection services = new ServiceCollection();
+            //IServiceCollection services = new ServiceCollection();
 
-            startup = new Startup(config);
-            startup.ConfigureServices(services);
+            //startup = new Startup(config);
+            //startup.ConfigureServices(services);
 
-            services.AddTransient<IConsoleService, ConsoleService>();
+            //services.AddTransient<IConsoleService, ConsoleService>();
 
-            this._consoleService = Substitute.For<IConsoleService>();
-            
-            IServiceProvider serviceProvider = services.BuildServiceProvider();
+            //var realConfigService = services.FirstOrDefault(x => x.ServiceType == typeof(IConfigCreatorService));
+            //services.Remove(realConfigService);
+            ////var mockedConfigService = Substitute.For<IConfigCreatorService>();
+            ////services.AddSingleton<>
 
-            var consoleDescription = services.FirstOrDefault(descriptor => descriptor.ServiceType == typeof(IConsoleService));
-            services.Remove(consoleDescription);
+            //IServiceProvider serviceProvider = services.BuildServiceProvider();
 
-            var mockConsoleService = Substitute.For<IConsoleService>();
+            //_services = serviceProvider;
 
+        }
 
+        public IServiceProvider getServices()
+        {
+            return this._services;
+        }
 
-            //services.AddTransient<mockConsoleService>();
-
-
+        public void MockSharedContent()
+        {
+               
         }
 
 
