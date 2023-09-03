@@ -1,8 +1,6 @@
-﻿namespace Ryker
+﻿namespace archiver
 {
-    using Application.Common;
-    using Application.Interfaces;
-    using Application.Services;
+    using archiver.Application.Common;
     using archiver.Application.Interfaces;
     using archiver.Application.Services;
     using MediatR;
@@ -32,7 +30,8 @@
                 .AddMediatR(AppDomain.CurrentDomain.GetAssemblies())
                 .AddTransient<IConfigCreatorService, ConfigCreatorService>()
                 .AddTransient<ILoggerService, LoggerService>()
-                .AddTransient<IConsoleService, ConsoleService>();
+                //.AddTransient<IConsoleService, ConsoleService>();
+            ;
         }
 
         public void RegisterPipelines(IServiceCollection services)

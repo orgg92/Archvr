@@ -1,17 +1,17 @@
 ﻿namespace Rkyver
 {
-    using Application;
-    using Application.Common;
-    using Application.Handlers.ConfigCreator;
-    using Application.Handlers.ConfigLoader;
-    using Application.Handlers.FileArchiver;
-    using Application.Handlers.FolderScanner;
-    using Application.Interfaces;
-    using Application.Services;
+    using archiver.Application;
+    using archiver.Application.Common;
+    using archiver.Application.Handlers.ConfigCreator;
+    using archiver.Application.Handlers.ConfigLoader;
+    using archiver.Application.Handlers.FileArchiver;
+    using archiver.Application.Handlers.FolderScanner;
+    using archiver.Application.Interfaces;
+    using archiver.Application.Services;
     using MediatR;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-    using Ryker;
+    using archiver;
     using System;
     using System.Reflection;
 

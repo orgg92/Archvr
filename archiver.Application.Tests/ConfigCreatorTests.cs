@@ -1,61 +1,51 @@
 ﻿namespace archiver.Application.Tests
 {
-    using Application;
-    using archiver.Application.Interfaces;
-    using global::Application;
-    using MediatR;
     using Moq;
-    using NSubstitute;
-    using Ryker;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Net.Http.Headers;
-    using System.Reflection;
-    using System.Text;
-    using System.Threading.Tasks;
 
     [TestClass]
-    public class ConfigCreatorTests : TestRoot
+    public class ConfigCreatorTests : TestBase
     {
-        private IConfigCreatorService _configCreatorService;
-        private IMediator _mediator;
+        private ConfigCreatorCommand _request;
 
         public ConfigCreatorTests()
         {
-            var services = getServices();
-            _mediator = Substitute.For<IMediator>();
-            _configCreatorService = Substitute.For<IConfigCreatorService>();
-        }
-
-
-        [TestMethod]
-        public void IfConfigNotExists_DoNotCreate()
-        {
-            var request = new ConfigCreatorCommand() {};
-            _configCreatorService.CheckConfigExists().Returns(true);
-
-            var result = _mediator.Send(request);
-
-            _configCreatorService.DidNotReceive().WriteNewConfigFile();
-        }
-
-        [TestMethod]
-        public void IfConfigNotExists_Create()
-        {
-            // Need to figure out why the mock service call isn't being called
-            //var request = new ConfigCreatorCommand() { };
-
-            //SharedContent.ConfigFullPath = null;
-
-            //_configCreatorService.CheckConfigExists()
-            //    .Returns(false);
-
-            ////_configCreatorService.S
-
-            //var result = _mediator.Send(request);
             
-            //_configCreatorService.Received().WriteNewConfigFile();
+        }
+
+        private ConfigCreatorCommand BuildRequest()
+        {
+            return new ConfigCreatorCommand();
+        }
+
+        [TestInitialize]
+        public async Task Initialize()
+        {
+            await base.Initialize();
+            _request = BuildRequest();
+
+        }
+
+        [TestMethod]
+        public async Task IfConfigExists_DoNotCreate()
+        {
+            
+            _configCreatorService.Setup(x => x.CheckConfigExists()).Returns(true);
+
+            await SendAsync(_request);
+
+            _configCreatorService.Verify(x => x.WriteNewConfigFile(), Times.Never);
+        }
+
+        [TestMethod]
+        public async Task IfConfigNotExists_Create()
+        {
+
+            _configCreatorService.Setup(x => x.CheckConfigExists()).Returns(false);
+
+            await SendAsync(_request);
+
+            _configCreatorService.Verify(x => x.WriteNewConfigFile(), Times.Once);
+
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace Application
+﻿namespace archiver.Application
 {
     using MediatR.Wrappers;
     using System;

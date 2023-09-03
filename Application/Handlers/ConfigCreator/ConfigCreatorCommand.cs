@@ -1,4 +1,4 @@
-﻿namespace Application.Handlers.ConfigCreator
+﻿namespace archiver.Application.Handlers.ConfigCreator
 {
     using archiver.Application.Interfaces;
     using MediatR;
@@ -18,13 +18,13 @@
             _configCreatorService = configCreatorService;
         }
 
-        public async Task<ConfigCreatorResponse> Handle(ConfigCreatorCommand request, CancellationToken cancellationToken)
+        public virtual async Task<ConfigCreatorResponse> Handle(ConfigCreatorCommand request, CancellationToken cancellationToken)
         {
             try
             {
                 // if file path exists then return false
 
-                var test = this.CheckConfigExists();
+                var test = CheckConfigExists();
 
                 return this.CheckConfigExists()
                     ? new ConfigCreatorResponse() { ConfigCreated = ConfigCreated.False }
@@ -39,7 +39,6 @@
 
         public bool CheckConfigExists()
         {
-            var test = _configCreatorService.CheckConfigExists();
             return _configCreatorService.CheckConfigExists();
         }
 

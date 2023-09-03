@@ -12,7 +12,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "archiver.Application.Tests", "archiver.Application.Tests\archiver.Application.Tests.csproj", "{332D42CD-5D00-44A1-BFFE-20A9CC6A9BDD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "archiver.Application.Tests", "archiver.Application.Tests\archiver.Application.Tests.csproj", "{332D42CD-5D00-44A1-BFFE-20A9CC6A9BDD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2F05631D-4607-4B9F-BA85-C2E9C069977F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{06794184-8626-4444-A9DB-7DBF266C19BF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +39,11 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{51442CD4-5AD4-41A6-A50D-7CC32AC4DF1F} = {2F05631D-4607-4B9F-BA85-C2E9C069977F}
+		{654A8BB7-FE03-4832-BAE3-046BC4B70E19} = {2F05631D-4607-4B9F-BA85-C2E9C069977F}
+		{332D42CD-5D00-44A1-BFFE-20A9CC6A9BDD} = {06794184-8626-4444-A9DB-7DBF266C19BF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {64BD3BED-D9DA-4BE4-9443-8EDD37BC03FC}

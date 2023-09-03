@@ -1,4 +1,4 @@
-﻿namespace Application.Handlers
+﻿namespace archiver.Application.Handlers
 {
     using System;
     using System.Collections.Generic;

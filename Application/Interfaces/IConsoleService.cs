@@ -1,4 +1,4 @@
-﻿namespace Application.Interfaces
+﻿namespace archiver.Application.Interfaces
 {
     public interface IConsoleService
     {

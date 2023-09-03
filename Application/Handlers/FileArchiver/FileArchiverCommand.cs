@@ -1,4 +1,4 @@
-﻿namespace Application.Handlers.FileArchiver
+﻿namespace archiver.Application.Handlers.FileArchiver
 {
     using Application.Interfaces;
     using MediatR;

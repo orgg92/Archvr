@@ -1,58 +1,104 @@
 namespace archiver.Application.Tests
 {
+    using archiver;
     using archiver.Application.Interfaces;
-    using global::Application;
-    using global::Application.Interfaces;
-    using global::Application.Services;
     using MediatR;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Moq;
-    using NSubstitute;
-    using NSubstitute.Extensions;
-    using Ryker;
 
     [TestClass]
-    public class TestRoot
+    public static class TestRoot
     {
 
-        public Startup startup;
-        public IServiceProvider _services;
+        internal static Mock<IConfigCreatorService> _configCreatorService;
+        internal static Mock<IConsoleService> _consoleService;
+        internal static  IServiceScopeFactory _scopeFactory;
 
-        public TestRoot()
+        private static MockRepository _mockRepository;
+        // private static SubstituteFactory _substituteFactory; -- Shift mocking from Moq to NSubstitute
+
+        [AssemblyInitialize]
+        public static void Initialize(TestContext testContext)
         {
-            //var config = new ConfigurationBuilder()
-            //    .Build();
+            var config = new ConfigurationBuilder()
+                .Build();
 
-            //IServiceCollection services = new ServiceCollection();
+            IServiceCollection services = new ServiceCollection();
 
-            //startup = new Startup(config);
-            //startup.ConfigureServices(services);
+            _mockRepository = new MockRepository(MockBehavior.Loose);
 
-            //services.AddTransient<IConsoleService, ConsoleService>();
+            var startup = new Startup(config);
+            startup.ConfigureServices(services);
 
-            //var realConfigService = services.FirstOrDefault(x => x.ServiceType == typeof(IConfigCreatorService));
-            //services.Remove(realConfigService);
-            ////var mockedConfigService = Substitute.For<IConfigCreatorService>();
-            ////services.AddSingleton<>
+            services
+                .RegisterMockReplacement(out _configCreatorService, false)
+                .RegisterMockReplacement(out _consoleService, false)
+                ;
 
-            //IServiceProvider serviceProvider = services.BuildServiceProvider();
-
-            //_services = serviceProvider;
+            _scopeFactory = services.BuildServiceProvider().GetRequiredService<IServiceScopeFactory>();
 
         }
 
-        public IServiceProvider getServices()
+        public static Task Reset()
         {
-            return this._services;
+            _configCreatorService.Reset();
+
+            return Task.FromResult(true);
         }
 
-        public void MockSharedContent()
+        public static async Task<TResponse> SendAsync<TResponse>(IRequest<TResponse> request)
         {
-               
+            using var scope = _scopeFactory.CreateScope();
+
+            var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+
+            return await mediator.Send(request);
         }
 
 
+        public static IServiceCollection RegisterMockReplacement<TMock>( 
+            this IServiceCollection services, 
+            out Mock<TMock> mockInstance,
+            bool throwIfExistingDependencyIsMissing)
+            where TMock : class
+        {
+            mockInstance = _mockRepository.Create<TMock>();
+            return services.RegisterMockReplacement(mockInstance, throwIfExistingDependencyIsMissing);
+        } 
+
+        public static IServiceCollection RegisterMockReplacement<TMock>( this IServiceCollection services,
+            bool throwIfExistingDependencyIsMissing)
+            where TMock : class
+        {
+            var mock = _mockRepository.Create<TMock>();
+
+            services.RegisterMockReplacement(mock, throwIfExistingDependencyIsMissing);
+
+            return services;
+        }
+
+        public static IServiceCollection RegisterMockReplacement<TMock>(
+            this IServiceCollection services,
+            IMock<TMock> mockInstance,
+            bool throwIfExistingDependencyIsMissing)
+            where TMock : class
+        {
+            var descriptor = services.FirstOrDefault(x => x.ServiceType == typeof(TMock));
+
+            if (descriptor is not null)
+            {
+                services.Remove(descriptor);
+            } else if (throwIfExistingDependencyIsMissing)
+            {
+                throw new Exception();
+            }
+
+            services.AddTransient(provider => mockInstance.Object);
+
+            return services;
+        }
+            
 
     }
 }

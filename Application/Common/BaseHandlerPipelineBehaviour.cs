@@ -1,8 +1,8 @@
-﻿namespace Application.Common
+﻿namespace archiver.Application.Common
 {
-    using Application.Handlers;
-    using Application.Handlers.FileArchiver;
-    using Application.Interfaces;
+    using archiver.Application.Handlers;
+    using archiver.Application.Handlers.FileArchiver;
+    using archiver.Application.Interfaces;
     using MediatR;
     using System;
     using System.Collections.Generic;

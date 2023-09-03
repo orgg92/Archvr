@@ -1,7 +1,6 @@
 ﻿namespace archiver.Application.Services
 {
     using archiver.Application.Interfaces;
-    using global::Application;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -43,7 +42,7 @@
             };
         }
 
-        public bool CheckConfigExists()
+        public virtual bool CheckConfigExists()
         {
             return Directory.Exists(SharedContent.ConfigDirectoryPath);
         }

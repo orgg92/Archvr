@@ -1,3 +1,3 @@
-global using Application.Handlers.ConfigCreator;
-global using Application.Interfaces;
+global using archiver.Application.Handlers.ConfigCreator;
 global using Microsoft.VisualStudio.TestTools.UnitTesting;
+global using static archiver.Application.Tests.TestRoot;

@@ -1,4 +1,4 @@
-﻿namespace Application.Handlers.FolderScanner
+﻿namespace archiver.Application.Handlers.FolderScanner
 {
     using MediatR;
 
