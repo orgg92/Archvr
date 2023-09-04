@@ -18,7 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Application\archiver.Application.csproj" />
-    <ProjectReference Include="..\R-kyver\archiver.csproj" />
+    <ProjectReference Include="..\archiver\archiver.csproj" />
   </ItemGroup>
 
   <ItemGroup>
