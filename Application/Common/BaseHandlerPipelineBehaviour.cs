@@ -3,6 +3,7 @@
     using archiver.Application.Handlers;
     using archiver.Application.Handlers.FileArchiver;
     using archiver.Application.Interfaces;
+    using archiver.Core;
     using MediatR;
     using System;
     using System.Collections.Generic;
