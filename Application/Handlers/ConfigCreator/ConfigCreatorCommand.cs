@@ -1,5 +1,7 @@
-﻿namespace Application.Handlers.ConfigCreator
+﻿namespace archiver.Application.Handlers.ConfigCreator
 {
+    using archiver.Application.Interfaces;
+    using archiver.Core;
     using MediatR;
 
     public class ConfigCreatorCommand : IRequest<ConfigCreatorResponse>
@@ -9,42 +11,21 @@
 
     public class ConfigCreatorHandler : IRequestHandler<ConfigCreatorCommand, ConfigCreatorResponse>
     {
-        public string[] argParameters = new string[1];
+        private readonly IConfigCreatorService _configCreatorService;
 
-        public string[] baseConfigValues = new string[]
+
+        public ConfigCreatorHandler(IConfigCreatorService configCreatorService)
         {
-            "TARGET_DRIVE=''",
-            "DESTINATION_DRIVE=''",
-            "RETRY_COUNT=''",
-            "LOG_PROGRESS_TO_CONSOLE='true'",
-            $"DIRFILELOCATION='{SharedContent.FilePathCreator(SharedContent.ConfigDirectoryPath, "directory-list.txt")}'",
-            "OUTPUT_LOCATION=''",
-            "CONSOLE_HEIGHT='25'",
-            "CONSOLE_WIDTH='100'",
-            "ARCHIVE_FOLDER_NAME='Archive'", // this is just the folder name not the full path of desired archive location
-            "LOG_LEVEL='0'" // 0-3
-        };
-
-        public Tuple<string, string>[] ConfigLocations;
-
-        public ConfigCreatorHandler()
-        {
-            SharedContent.CurrentPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-            var logPath = SharedContent.FilePathCreator(SharedContent.CurrentPath, SharedContent.LogPath);
-            var configPath = SharedContent.FilePathCreator(SharedContent.CurrentPath, SharedContent.ConfigDirectoryPath);
-
-            this.ConfigLocations = new Tuple<string, string>[] {
-                new Tuple<string, string> (logPath,   SharedContent.LogName),
-                new Tuple<string, string> (configPath,  SharedContent.DirListFileLocation), // only need 
-                new Tuple<string, string> (configPath,  SharedContent.ConfigFullPath )
-            };
+            _configCreatorService = configCreatorService;
         }
 
-        public async Task<ConfigCreatorResponse> Handle(ConfigCreatorCommand request, CancellationToken cancellationToken)
+        public virtual async Task<ConfigCreatorResponse> Handle(ConfigCreatorCommand request, CancellationToken cancellationToken)
         {
             try
             {
                 // if file path exists then return false
+
+                var test = CheckConfigExists();
 
                 return this.CheckConfigExists()
                     ? new ConfigCreatorResponse() { ConfigCreated = ConfigCreated.False }
@@ -59,50 +40,22 @@
 
         public bool CheckConfigExists()
         {
-            return Directory.Exists(SharedContent.ConfigDirectoryPath);          
+            return _configCreatorService.CheckConfigExists();
         }
 
         public ConfigCreatorResponse WriteNewConfigFile()
         {
-            for (int i = 0; i < this.ConfigLocations.Length; i++)
+            try
             {
-                var filedir = this.ConfigLocations[i].Item1;
-                var filePath = this.ConfigLocations[i].Item2;
+                _configCreatorService.WriteNewConfigFile();
 
-                // if directory doesn't exist, create it, if file doesn't exist create that too - this ensures all prerequisite files are created on startup
-                if (!Directory.Exists(filedir))
-                {
-                    Directory.CreateDirectory(filedir);
-                }
+                return new ConfigCreatorResponse() { ConfigCreated = ConfigCreated.True };
 
-                if (!File.Exists(filePath))
-                {
-
-                    if (filePath.Contains("config.ini")) {
-                        using (FileStream fs = File.Create(filePath))
-                        {
-                            using (StreamWriter sw = new StreamWriter(fs))
-                            {
-                                foreach (var config in baseConfigValues)
-                                { 
-
-                                    // Create config file with boilerplate values
-                                    {
-                                        sw.WriteLine(config);
-                                    }
-                                }
-                            }
-                        } 
-                    } else {
-
-                        // create blank files for writing later
-
-                        File.Create(filePath);
-                    }
-                }
+            } catch (Exception e)
+            {
+                throw new ProgramException() { ErrorCode = ErrorCodes.CONFIG_CREATION_ERROR };
             }
 
-            return new ConfigCreatorResponse() { ConfigCreated = ConfigCreated.True };
         }
     }
 }

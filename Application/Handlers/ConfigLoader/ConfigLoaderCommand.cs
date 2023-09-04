@@ -1,5 +1,6 @@
-﻿namespace Application.Handlers.ConfigLoader
+﻿namespace archiver.Application.Handlers.ConfigLoader
 {
+    using archiver.Core;
     using MediatR;
     using System.ComponentModel;
 

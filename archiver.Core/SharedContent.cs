@@ -1,11 +1,8 @@
-﻿namespace Application
+﻿namespace archiver.Core
 {
-    using MediatR.Wrappers;
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     // <summary>
     // a collection of resources and methods that can be used throughout the program

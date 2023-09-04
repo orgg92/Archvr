@@ -1,4 +1,4 @@
-﻿namespace archiver.Application.Services
+﻿namespace archiver.Infrastructure.Interfaces
 {
     public class FileCopyingService
     {

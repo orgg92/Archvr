@@ -1,5 +1,6 @@
-﻿namespace Application.Handlers.FolderScanner
+﻿namespace archiver.Application.Handlers.FolderScanner
 {
+    using archiver.Core;
     using MediatR;
 
     public class FolderScannerCommand : IRequest<FolderScannerResponse>

@@ -1,4 +1,4 @@
-﻿namespace Application.Handlers.FolderScanner
+﻿namespace archiver.Application.Handlers.FolderScanner
 {
     using System;
     using System.Collections.Generic;

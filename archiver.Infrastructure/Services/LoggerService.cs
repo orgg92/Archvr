@@ -1,12 +1,12 @@
-﻿namespace archiver.Application.Services
+﻿namespace archiver.Infrastructure.Interfaces
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
-    using Application.Interfaces;
     using archiver.Core;
+    using Infrastructure.Interfaces;
 
     public class LoggerService : ILoggerService
     {

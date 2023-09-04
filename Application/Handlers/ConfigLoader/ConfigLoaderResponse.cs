@@ -1,4 +1,4 @@
-﻿namespace Application.Handlers.ConfigLoader
+﻿namespace archiver.Application.Handlers.ConfigLoader
 {
     using System;
     using System.Collections.Generic;

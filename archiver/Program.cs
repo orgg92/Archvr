@@ -1,17 +1,16 @@
-﻿namespace Rkyver
+﻿namespace archiver
 {
-    using Application;
-    using Application.Common;
-    using Application.Handlers.ConfigCreator;
-    using Application.Handlers.ConfigLoader;
-    using Application.Handlers.FileArchiver;
-    using Application.Handlers.FolderScanner;
-    using Application.Interfaces;
-    using Application.Services;
+    using archiver.Application;
+    using archiver.Application.Handlers.ConfigCreator;
+    using archiver.Application.Handlers.ConfigLoader;
+    using archiver.Application.Handlers.FileArchiver;
+    using archiver.Application.Handlers.FolderScanner;
+    using archiver.Application.Interfaces;
+    using archiver.Core;
     using MediatR;
+    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using System;
-    using System.Reflection;
 
     public class Program
     {
@@ -29,27 +28,38 @@
             _consoleService = consoleService;
             _mediator = mediator;
             _lockedFiles = new List<string>();
+
+            Initialize();
+        }
+
+        public static void Initialize()
+        {
+            var config = new ConfigurationBuilder()
+                .Build();
+
+            IServiceCollection services = new ServiceCollection();
+
+            Startup startup = new Startup(config);
+            startup.ConfigureServices(services);
+            IServiceProvider serviceProvider = services.BuildServiceProvider();
+
+
+            _consoleService = serviceProvider
+                .GetService<IConsoleService>();
+
+            _mediator = serviceProvider
+                .GetService<IMediator>();
+
+            _lockedFiles = new List<string>();
         }
 
 
         static async Task Main(string[] args)
         {
 
+            Initialize();
+                
             Console.Clear();
-
-            _lockedFiles = new List<string>();
-
-            var _serviceCollection = new ServiceCollection()
-                 .AddMediatR(AppDomain.CurrentDomain.GetAssemblies())
-                 .AddTransient(typeof(IPipelineBehavior<,>), typeof(BaseHandlerPipelineBehaviour<,>))
-                 .AddTransient<IMediatorService, MediatorService>()
-                 .AddSingleton<IConsoleService, ConsoleService>()
-                 .AddSingleton<ILoggerService, LoggerService>()
-                 .BuildServiceProvider();
-
-            _mediator = _serviceCollection.GetService<IMediator>();
-            _consoleService = _serviceCollection.GetService<IConsoleService>();
-
 
             SharedContent.ConsoleWidth = Console.WindowWidth;
             SharedContent.ResponsiveSpacer = new String('*', SharedContent.ConsoleWidth);

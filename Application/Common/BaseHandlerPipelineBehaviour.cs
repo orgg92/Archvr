@@ -1,8 +1,9 @@
-﻿namespace Application.Common
+﻿namespace archiver.Application.Common
 {
-    using Application.Handlers;
-    using Application.Handlers.FileArchiver;
-    using Application.Interfaces;
+    using archiver.Application.Handlers;
+    using archiver.Application.Handlers.FileArchiver;
+    using archiver.Application.Interfaces;
+    using archiver.Core;
     using MediatR;
     using System;
     using System.Collections.Generic;
@@ -16,7 +17,7 @@
     /// <typeparam name="TRequest"></typeparam>
     /// <typeparam name="TResponse"></typeparam>
     
-    public class BaseHandlerPipelineBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : MediatR.IRequest<TResponse> 
+    public class BaseHandlerPipelineBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse> 
     {
         private readonly IConsoleService _consoleService;
 
@@ -27,8 +28,6 @@
 
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
-            // find the logging announcement and write to console
-
             var handlerName = typeof(TRequest).Name;
 
             try
@@ -36,6 +35,7 @@
                 // if request is to archive a file do not announce message in pipeline
                 if (handlerName != HandlerNames.FileArchiverCommand.ToString())
                 {
+                    // find the logging announcement and write to console
                     var handlerMessage = SharedContent.ReturnMessageForHandler(handlerName);
                     await _consoleService.WriteToConsole($"{SharedContent.ReturnFormattedDateTimeToString()} {handlerMessage}");
                 }
