@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Application\archiver.Application.csproj" />
+    <ProjectReference Include="..\..\src\archiver.Application\archiver.Application.csproj" />
     <ProjectReference Include="..\..\src\archiver\archiver.csproj" />
   </ItemGroup>
 
