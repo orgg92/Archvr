@@ -24,12 +24,6 @@
                 Directory.CreateDirectory(SharedContent.LogPath);
             }
 
-            //if (!File.Exists(LogFilePath))
-            //{
-            //    File.Create(LogFilePath);
-            //    await Task.Delay(1000);
-            //}
-
             try
             {
                 using (FileStream fs = new FileStream(LogFilePath, FileMode.Append))

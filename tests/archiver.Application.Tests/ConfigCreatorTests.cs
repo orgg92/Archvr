@@ -1,5 +1,6 @@
 ﻿namespace archiver.Application.Tests
 {
+    using archiver.Application.Handlers.ConfigCreator;
     using Moq;
 
     [TestClass]
