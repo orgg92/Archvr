@@ -43,7 +43,7 @@
             };
         }
 
-        public virtual bool CheckConfigExists()
+        public bool CheckConfigExists()
         {
             return Directory.Exists(SharedContent.ConfigDirectoryPath);
         }
