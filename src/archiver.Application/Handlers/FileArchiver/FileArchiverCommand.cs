@@ -48,7 +48,7 @@
                 // the DESTINATION FILE last modified is before the SOURCE FILE'S last modified
 
                 // Debug, remove after || 
-                if (!File.Exists(destPath) || (File.GetLastWriteTimeUtc(srcPath) > File.GetLastWriteTimeUtc(destPath)) )
+                if (!File.Exists(destPath) ) //  || (File.GetLastWriteTimeUtc(srcPath) > File.GetLastWriteTimeUtc(destPath)) )
                 {
                     File.Copy(srcPath, destPath);
                 }

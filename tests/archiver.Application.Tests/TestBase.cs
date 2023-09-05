@@ -12,7 +12,7 @@
         [TestInitialize]
         public virtual async Task Initialize()
         {
-            await Reset();
+
         }
     }
 }
