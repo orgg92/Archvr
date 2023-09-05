@@ -25,8 +25,6 @@
             {
                 // if file path exists then return false
 
-                var test = CheckConfigExists();
-
                 return this.CheckConfigExists()
                     ? new ConfigCreatorResponse() { ConfigCreated = ConfigCreated.False }
                     : WriteNewConfigFile();

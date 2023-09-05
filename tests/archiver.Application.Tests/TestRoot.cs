@@ -6,17 +6,19 @@ namespace archiver.Application.Tests
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Moq;
+    using NSubstitute;
+    using NSubstitute.Core;
 
     [TestClass]
     public static class TestRoot
     {
 
-        internal static Mock<IConfigCreatorService> _configCreatorService;
-        internal static Mock<IConsoleService> _consoleService;
+        internal static IConfigCreatorService _configCreatorService;
+        internal static IConsoleService _consoleService;
         internal static  IServiceScopeFactory _scopeFactory;
 
         private static MockRepository _mockRepository;
-        // private static SubstituteFactory _substituteFactory; -- Shift mocking from Moq to NSubstitute
+        private static SubstituteFactory _substituteFactory; // -- Shift mocking from Moq to NSubstitute
 
         [AssemblyInitialize]
         public static void Initialize(TestContext testContext)
@@ -36,13 +38,15 @@ namespace archiver.Application.Tests
                 .RegisterMockReplacement(out _consoleService, false)
                 ;
 
+            //var substituteFactory = _substituteFactory.Create()
+
             _scopeFactory = services.BuildServiceProvider().GetRequiredService<IServiceScopeFactory>();
 
         }
 
         public static Task Reset()
         {
-            _configCreatorService.Reset();
+            //_configCreatorService.Reset();
 
             return Task.FromResult(true);
         }
@@ -59,11 +63,11 @@ namespace archiver.Application.Tests
 
         public static IServiceCollection RegisterMockReplacement<TMock>( 
             this IServiceCollection services, 
-            out Mock<TMock> mockInstance,
+            out TMock mockInstance,
             bool throwIfExistingDependencyIsMissing)
             where TMock : class
         {
-            mockInstance = _mockRepository.Create<TMock>();
+            mockInstance = Substitute.For<TMock>();
             return services.RegisterMockReplacement(mockInstance, throwIfExistingDependencyIsMissing);
         } 
 
@@ -80,7 +84,7 @@ namespace archiver.Application.Tests
 
         public static IServiceCollection RegisterMockReplacement<TMock>(
             this IServiceCollection services,
-            IMock<TMock> mockInstance,
+            TMock mockInstance,
             bool throwIfExistingDependencyIsMissing)
             where TMock : class
         {
@@ -94,7 +98,7 @@ namespace archiver.Application.Tests
                 throw new Exception();
             }
 
-            services.AddTransient(provider => mockInstance.Object);
+            services.AddTransient(provider => mockInstance);
 
             return services;
         }

@@ -1,7 +1,7 @@
-﻿namespace archiver.Application.Tests
+﻿namespace archiver.Application.Tests.HandlerTests
 {
     using archiver.Application.Handlers.ConfigCreator;
-    using Moq;
+    using NSubstitute;
 
     [TestClass]
     public class ConfigCreatorTests : TestBase
@@ -10,7 +10,7 @@
 
         public ConfigCreatorTests()
         {
-            
+
         }
 
         private ConfigCreatorCommand BuildRequest()
@@ -29,23 +29,21 @@
         [TestMethod]
         public async Task IfConfigExists_DoNotCreate()
         {
-            
-            _configCreatorService.Setup(x => x.CheckConfigExists()).Returns(true);
+            _configCreatorService.CheckConfigExists().Returns(true);
 
             await SendAsync(_request);
 
-            _configCreatorService.Verify(x => x.WriteNewConfigFile(), Times.Never);
+            _configCreatorService.DidNotReceive().WriteNewConfigFile();
         }
 
         [TestMethod]
         public async Task IfConfigNotExists_Create()
         {
-
-            _configCreatorService.Setup(x => x.CheckConfigExists()).Returns(false);
+            _configCreatorService.CheckConfigExists().Returns(false);
 
             await SendAsync(_request);
 
-            _configCreatorService.Verify(x => x.WriteNewConfigFile(), Times.Once);
+            _configCreatorService.Received().WriteNewConfigFile();
 
         }
     }
