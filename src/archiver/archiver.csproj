@@ -17,7 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Application\archiver.Application.csproj" />
     <ProjectReference Include="..\archiver.Application\archiver.Application.csproj" />
   </ItemGroup>
 
