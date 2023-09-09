@@ -3,9 +3,7 @@
     using archiver.Core;
     using MediatR;
 
-    public class FolderScannerCommand : IRequest<FolderScannerResponse>
-    {
-    }
+    public class FolderScannerCommand : IRequest<FolderScannerResponse> { }
 
     public class FolderScannerHandler : IRequestHandler<FolderScannerCommand, FolderScannerResponse>
     {
@@ -13,15 +11,15 @@
         {
             try
             {
-                // read directories from DirListFileLocation
+                // read directories from DirListFileLocation [i.e. the text file of directories to archive]
 
-                var fr = File.ReadAllLines(SharedContent.DirListFileLocation);
+                var fr = File.ReadAllLines(ProgramConfig.DirListFileLocation);
 
                 var fileList = new List<string>();
 
                 foreach (var directory in fr)
                 {
-                    fileList.AddRange(Directory.EnumerateFiles(SharedContent.FilePathCreator(SharedContent.FormatDriveToStringContext(), directory)));
+                    fileList.AddRange(Directory.EnumerateFiles(ProgramConfig.FilePathCreator(ProgramConfig.FormatDriveToStringContext(), directory)));
                 }
 
                 return new FolderScannerResponse() { FileList = fileList };

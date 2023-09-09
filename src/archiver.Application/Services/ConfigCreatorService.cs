@@ -3,10 +3,7 @@
     using archiver.Application.Interfaces;
     using archiver.Core;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
+
 
     public class ConfigCreatorService : IConfigCreatorService
     {
@@ -14,38 +11,24 @@
         private string logPath,
                        configPath;
 
-        public string[] baseConfigValues = new string[]
-        {
-            "TARGET_DRIVE=''",
-            "DESTINATION_DRIVE=''",
-            "RETRY_COUNT=''",
-            "LOG_PROGRESS_TO_CONSOLE='true'",
-            $"DIRFILELOCATION='{SharedContent.FilePathCreator(SharedContent.ConfigDirectoryPath, "directory-list.txt")}'",
-            "OUTPUT_LOCATION=''",
-            "CONSOLE_HEIGHT='25'",
-            "CONSOLE_WIDTH='100'",
-            "ARCHIVE_FOLDER_NAME='Archive'", // this is just the folder name not the full path of desired archive location
-            "LOG_LEVEL='0'" // 0-3
-        };
-
         public Tuple<string, string>[] ConfigLocations;
 
         public ConfigCreatorService()
         {
-            SharedContent.CurrentPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-            logPath = SharedContent.FilePathCreator(SharedContent.CurrentPath, SharedContent.LogPath);
-            configPath = SharedContent.FilePathCreator(SharedContent.CurrentPath, SharedContent.ConfigDirectoryPath);
+            ProgramConfig.CurrentPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            logPath = ProgramConfig.FilePathCreator(ProgramConfig.CurrentPath, ProgramConfig.LogPath);
+            configPath = ProgramConfig.FilePathCreator(ProgramConfig.CurrentPath, ProgramConfig.ConfigDirectoryPath);
 
             this.ConfigLocations = new Tuple<string, string>[] {
-                new Tuple<string, string> (logPath,   SharedContent.LogName),
-                new Tuple<string, string> (configPath,  SharedContent.DirListFileLocation), // only need 
-                new Tuple<string, string> (configPath,  SharedContent.ConfigFullPath )
+                new Tuple<string, string> (logPath,   ProgramConfig.LogName),
+                new Tuple<string, string> (configPath,  ProgramConfig.DirListFileLocation), // only need 
+                new Tuple<string, string> (configPath,  ProgramConfig.ConfigFullPath )
             };
         }
 
         public bool CheckConfigExists()
         {
-            return Directory.Exists(SharedContent.ConfigDirectoryPath);
+            return Directory.Exists(ProgramConfig.ConfigDirectoryPath);
         }
 
         public void WriteNewConfigFile()
@@ -70,11 +53,13 @@
                         {
                             using (StreamWriter sw = new StreamWriter(fs))
                             {
-                                foreach (var config in baseConfigValues)
+                                var config = new BaseConfigValues();
+
+                                foreach (var value in config.Values)
                                 {
                                     // Create config file with boilerplate values
                                     {
-                                        sw.WriteLine(config);
+                                        sw.WriteLine(value.ReturnConfigReadyString());
                                     }
                                 }
                             }

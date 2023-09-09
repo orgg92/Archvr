@@ -1,12 +1,8 @@
 ﻿namespace archiver.Application.Services
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Security.Cryptography.X509Certificates;
-    using System.Text;
-    using System.Threading.Tasks;
     using Application.Interfaces;
+    using System;
+    using System.Threading.Tasks;
 
     public class ConsoleService : IConsoleService
     {
@@ -19,6 +15,7 @@
 
         public async Task WriteToConsole(string textString)
         {
+            // When writing to console, also write to log file (for headless/service mode)
             Console.WriteLine(textString);
             await WriteToLogFile(textString);
         }

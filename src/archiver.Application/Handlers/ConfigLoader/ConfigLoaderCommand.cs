@@ -2,12 +2,8 @@
 {
     using archiver.Core;
     using MediatR;
-    using System.ComponentModel;
 
-    public class ConfigLoaderCommand : IRequest<ConfigLoaderResponse>
-    {
-        // no data required to load config
-    }
+    public class ConfigLoaderCommand : IRequest<ConfigLoaderResponse> { }
 
     public class ConfigLoaderHandler : IRequestHandler<ConfigLoaderCommand, ConfigLoaderResponse>
     {
@@ -37,28 +33,28 @@
         //check file has been modified since it's creation, otherwise the file will only contain default config template so no point trying to load
         public bool CheckConfigHasBeenTouched()
         {
-            return File.GetCreationTimeUtc(SharedContent.ConfigFullPath) != File.GetLastWriteTimeUtc(SharedContent.ConfigFullPath);
+            return File.GetCreationTimeUtc(ProgramConfig.ConfigFullPath) != File.GetLastWriteTimeUtc(ProgramConfig.ConfigFullPath);
         }
 
         public bool CheckConfigExists()
         {
-            return Directory.Exists(SharedContent.ConfigDirectoryPath) && Directory.Exists(SharedContent.LogPath);
+            return Directory.Exists(ProgramConfig.ConfigDirectoryPath) && Directory.Exists(ProgramConfig.LogPath);
         }
 
         public static string SelectConfigValue(string configSetting)
         {
-            return SharedContent.configValues.Where(x => x.Name == configSetting).First().Value;
+            return ProgramConfig.configValues.Where(x => x.Name == configSetting).First().Value;
         }
 
         public void LoadConfig()
         {
             int i = 0;
-            List<ConfigSetting> configSettings = new List<ConfigSetting>();
-            foreach (string line in System.IO.File.ReadLines($"{SharedContent.ConfigFullPath}"))
+            List<WriteConfigSettingModel> configSettings = new List<WriteConfigSettingModel>();
+            foreach (string line in System.IO.File.ReadLines($"{ProgramConfig.ConfigFullPath}"))
             {
                 var setting = line.Split("=");
 
-                configSettings.Add(new ConfigSetting()
+                configSettings.Add(new WriteConfigSettingModel()
                 {
                     Name = setting[0],
                     Value = setting[1].Replace("'", "")
@@ -68,22 +64,23 @@
             }
 
             // set global values for use throughout the application
-            SharedContent.configValues = configSettings.ToArray();
+            ProgramConfig.configValues = configSettings.ToArray();
 
-            SharedContent.TargetDrive = SelectConfigValue("TARGET_DRIVE");
-            SharedContent.DestinationDrive = SelectConfigValue("DESTINATION_DRIVE");
-            SharedContent.RetryCount = SelectConfigValue("RETRY_COUNT");
-            SharedContent.LogProgressToConsole = Boolean.TryParse(SelectConfigValue("LOG_PROGRESS_TO_CONSOLE"), out var result) ? result : false;
-            SharedContent.DirListFileLocation = SelectConfigValue("DIRFILELOCATION");
-            SharedContent.OutputLocation = SelectConfigValue("OUTPUT_LOCATION");
-            SharedContent.ConsoleHeight = int.TryParse(SelectConfigValue("CONSOLE_HEIGHT"), out int ch) ? ch : 25;
-            SharedContent.ConsoleWidth = int.TryParse(SelectConfigValue("CONSOLE_WIDTH"), out int cw) ? cw : 100;
-            SharedContent.ArchiveFolderName = SelectConfigValue("ARCHIVE_FOLDER_NAME");
+            ProgramConfig.TargetDrive = SelectConfigValue("TARGET_DRIVE");
+            ProgramConfig.DestinationDrive = SelectConfigValue("DESTINATION_DRIVE");
+            ProgramConfig.RetryCount = SelectConfigValue("RETRY_COUNT");
+            ProgramConfig.LogProgressToConsole = Boolean.TryParse(SelectConfigValue("LOG_PROGRESS_TO_CONSOLE"), out var result) ? result : false;
+            ProgramConfig.DirListFileLocation = SelectConfigValue("DIRFILE_LOCATION");
+            ProgramConfig.OutputLocation = SelectConfigValue("OUTPUT_LOCATION");
+            ProgramConfig.ConsoleHeight = int.TryParse(SelectConfigValue("CONSOLE_HEIGHT"), out int ch) ? ch : 25;
+            ProgramConfig.ConsoleWidth = int.TryParse(SelectConfigValue("CONSOLE_WIDTH"), out int cw) ? cw : 100;
+            ProgramConfig.ArchiveFolderName = SelectConfigValue("ARCHIVE_FOLDER_NAME");
 
             SetConsoleSize();
 
-            SharedContent.ResponsiveSpacer = new String('*', SharedContent.ConsoleWidth);
+            ProgramConfig.ResponsiveSpacer = new String('*', ProgramConfig.ConsoleWidth);
         }
+
 
         // allows program to run 
         public void LoadDefaultValues()
@@ -95,11 +92,11 @@
         {
             if (System.Environment.OSVersion.Platform.ToString().ToLower().Contains("win"))
             {
-                Console.SetWindowSize(SharedContent.ConsoleWidth, SharedContent.ConsoleHeight);
+                Console.SetWindowSize(ProgramConfig.ConsoleWidth, ProgramConfig.ConsoleHeight);
             } else
             {
-                SharedContent.ConsoleHeight = Console.WindowHeight;
-                SharedContent.ConsoleWidth = Console.WindowWidth;
+                ProgramConfig.ConsoleHeight = Console.WindowHeight;
+                ProgramConfig.ConsoleWidth = Console.WindowWidth;
             }
         }
     }

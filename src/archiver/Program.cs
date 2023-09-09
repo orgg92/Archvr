@@ -61,10 +61,10 @@
                 
             Console.Clear();
 
-            SharedContent.ConsoleWidth = Console.WindowWidth;
-            SharedContent.ResponsiveSpacer = new String('*', SharedContent.ConsoleWidth);
+            ProgramConfig.ConsoleWidth = Console.WindowWidth;
+            ProgramConfig.ResponsiveSpacer = new String('*', ProgramConfig.ConsoleWidth);
 
-            await _consoleService.WriteToConsole(SharedContent.ResponsiveSpacer);
+            await _consoleService.WriteToConsole(ProgramConfig.ResponsiveSpacer);
 
             var configCreation = await _mediator.Send(new ConfigCreatorCommand());
 
@@ -106,7 +106,7 @@
 
             }
 
-            await _consoleService.WriteToConsole("\r\n" + SharedContent.ResponsiveSpacer);
+            await _consoleService.WriteToConsole("\r\n" + ProgramConfig.ResponsiveSpacer);
         }
 
         private static async Task ProcessFileList(IEnumerable<string> fileList, bool retryMode = false)
