@@ -4,10 +4,7 @@
     using archiver.Core;
     using MediatR;
 
-    public class ConfigCreatorCommand : IRequest<ConfigCreatorResponse>
-    {
-
-    }
+    public class ConfigCreatorCommand : IRequest<ConfigCreatorResponse> { }
 
     public class ConfigCreatorHandler : IRequestHandler<ConfigCreatorCommand, ConfigCreatorResponse>
     {

@@ -27,7 +27,7 @@ namespace archiver.Application.Tests
             startup.ConfigureServices(services);
 
             services
-                .RegisterMockReplacement(out _configCreatorService, false)
+                .RegisterMockReplacement(out _configCreatorService, true)
                 .RegisterMockReplacement(out _consoleService, false)
                 ;
 
@@ -68,7 +68,7 @@ namespace archiver.Application.Tests
                 services.Remove(descriptor);
             } else if (throwIfExistingDependencyIsMissing)
             {
-                throw new Exception();
+                throw new DI_Exception();
             }
 
             services.AddTransient(provider => mockInstance);
@@ -77,5 +77,10 @@ namespace archiver.Application.Tests
         }
             
 
+    }
+
+    public class DI_Exception : Exception
+    {
+        public string Message { get; } = "A service needs registering";
     }
 }

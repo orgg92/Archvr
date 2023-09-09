@@ -20,7 +20,7 @@
             "DESTINATION_DRIVE=''",
             "RETRY_COUNT=''",
             "LOG_PROGRESS_TO_CONSOLE='true'",
-            $"DIRFILELOCATION='{SharedContent.FilePathCreator(SharedContent.ConfigDirectoryPath, "directory-list.txt")}'",
+            $"DIRFILELOCATION='{ProgramConfig.FilePathCreator(ProgramConfig.ConfigDirectoryPath, "directory-list.txt")}'",
             "OUTPUT_LOCATION=''",
             "CONSOLE_HEIGHT='25'",
             "CONSOLE_WIDTH='100'",
@@ -32,20 +32,20 @@
 
         public ConfigCreatorService()
         {
-            SharedContent.CurrentPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-            logPath = SharedContent.FilePathCreator(SharedContent.CurrentPath, SharedContent.LogPath);
-            configPath = SharedContent.FilePathCreator(SharedContent.CurrentPath, SharedContent.ConfigDirectoryPath);
+            ProgramConfig.CurrentPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            logPath = ProgramConfig.FilePathCreator(ProgramConfig.CurrentPath, ProgramConfig.LogPath);
+            configPath = ProgramConfig.FilePathCreator(ProgramConfig.CurrentPath, ProgramConfig.ConfigDirectoryPath);
 
             this.ConfigLocations = new Tuple<string, string>[] {
-                new Tuple<string, string> (logPath,   SharedContent.LogName),
-                new Tuple<string, string> (configPath,  SharedContent.DirListFileLocation), // only need 
-                new Tuple<string, string> (configPath,  SharedContent.ConfigFullPath )
+                new Tuple<string, string> (logPath,   ProgramConfig.LogName),
+                new Tuple<string, string> (configPath,  ProgramConfig.DirListFileLocation), // only need 
+                new Tuple<string, string> (configPath,  ProgramConfig.ConfigFullPath )
             };
         }
 
         public virtual bool CheckConfigExists()
         {
-            return Directory.Exists(SharedContent.ConfigDirectoryPath);
+            return Directory.Exists(ProgramConfig.ConfigDirectoryPath);
         }
 
         public void WriteNewConfigFile()

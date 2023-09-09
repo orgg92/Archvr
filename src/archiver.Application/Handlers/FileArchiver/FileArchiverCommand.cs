@@ -31,7 +31,7 @@
 
                 await _consoleService.WriteToConsole(message);
 
-                var destinationDirectory = SharedContent.ReplaceDriveToArchiveContext(SharedContent.DestinationDrive.ToCharArray()[0], new DirectoryInfo(request.FileName).Parent.ToString());
+                var destinationDirectory = ProgramConfig.ReplaceDriveToArchiveContext(ProgramConfig.DestinationDrive.ToCharArray()[0], new DirectoryInfo(request.FileName).Parent.ToString());
 
                 // check - if not exists, create
                 if (!Directory.Exists(destinationDirectory))

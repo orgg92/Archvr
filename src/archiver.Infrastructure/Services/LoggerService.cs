@@ -14,14 +14,14 @@
 
         public LoggerService()
         {
-            LogFilePath = SharedContent.LogName;
+            LogFilePath = ProgramConfig.LogName;
         }
 
         public async Task WriteConsoleMessageToLogFile(string textString)
         {
-            if (!Directory.Exists(SharedContent.LogPath))
+            if (!Directory.Exists(ProgramConfig.LogPath))
             {
-                Directory.CreateDirectory(SharedContent.LogPath);
+                Directory.CreateDirectory(ProgramConfig.LogPath);
             }
 
             try

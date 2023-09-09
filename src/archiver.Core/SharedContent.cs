@@ -5,35 +5,11 @@
     using System.Linq;
 
     // <summary>
-    // a collection of resources and methods that can be used throughout the program
+    // a collection of static content, resources and methods that can be used throughout the program
     // </summary>
 
     public static class SharedContent
     {
-        public static IEnumerable<ConfigSetting> configValues;
-
-        public static bool LogProgressToConsole;
-
-        public static string FilePath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location),
-             CurrentPath = AppDomain.CurrentDomain.BaseDirectory,
-             TargetDrive = String.Empty,
-             DestinationDrive = String.Empty,
-             Spacer = "************************************************************** \r\n",
-             WelcomeMessage = $"{Spacer} {SharedContent.ReturnFormattedDateTimeToString()}: Starting archive process \r\n{Spacer}",
-             LogPath = FilePathCreator(CurrentPath, "Logs\\"),
-             LogName = FilePathCreator(LogPath, "logfile.log"),
-             ConfigDirectoryPath = FilePathCreator(CurrentPath, "Config\\"),
-             ConfigFullPath = FilePathCreator(ConfigDirectoryPath, "config.ini"),
-             DirListFileLocation = FilePathCreator(ConfigDirectoryPath, "directory-list.txt"),
-             UserDestinationDrive = String.Empty,
-             OutputLocation = String.Empty,
-             RetryCount = String.Empty,
-             ProgressMeter = $"{0}% complete",
-             ResponsiveSpacer = String.Empty,
-             ArchiveFolderName = String.Empty,
-             ArchivePath = String.Empty; // this is {targetDrive}/{archiveFolderName}/< full file path >
-
-        public static int ConsoleHeight, ConsoleWidth;
 
         public static string logo = @"   
                 _            _     _                
@@ -46,8 +22,8 @@
         public static string[] UserGuideMessages =
         {
             "Entering user guided mode...",
-            $"What is the drive letter of the destination drive? (Leave blank for default: {SharedContent.DestinationDrive})",
-            $"What is the file path to the location of file containing files for backup? (Leave blank for default: {SharedContent.DirListFileLocation})"
+            $"What is the drive letter of the destination drive? (Leave blank for default: {ProgramConfig.DestinationDrive})",
+            $"What is the file path to the location of file containing files for backup? (Leave blank for default: {ProgramConfig.DirListFileLocation})"
         };
 
         public static IEnumerable<HandlerLoggingKeyValuePair> ProgramExceptions = new HandlerLoggingKeyValuePair[]
@@ -77,31 +53,6 @@
             new HandlerLoggingKeyValuePair() { Key = "FileArchiverCommand", Value = "An error occurred while trying to archive file: {0}"}
         };
 
-        public static string FilePathCreator(string directory, string filePath)
-        {
-            return System.IO.Path.Combine(directory, filePath).Replace(@"\\", @"\");
-        }
-
-        public static string FormatDriveToStringContext()
-        {
-            return $"{SharedContent.TargetDrive}:\\";
-        }
-
-        public static string ReplaceDriveToArchiveContext(char drive, string filepath)
-        {
-            var directoryName = new DirectoryInfo(filepath).Name;
-            var archiveContextPath = $"{drive}:\\{SharedContent.ArchiveFolderName}\\{directoryName}";
-            return new string(archiveContextPath);
-        }
-
-        public static string GetFullArchiveAndFilePath(string filepath)
-        {
-            var fileName = Path.GetFileName(filepath);
-            var drive = SharedContent.DestinationDrive;
-            var archiveFolder = SharedContent.ArchiveFolderName;
-            var archivePath = System.IO.Path.Combine($"{drive}:\\{archiveFolder}", fileName).Replace(@"\\", @"\");
-            return System.IO.Path.Combine($"{drive}:\\{archiveFolder}", fileName).Replace(@"\\", @"\");
-        }
 
         // returns error message for the specified error code
         public static string ReturnErrorMessageForErrorCode(string errorCode)
@@ -121,24 +72,10 @@
         }
     }
 
-    public class HandlerLoggingKeyValuePair
-    {
-        public string Key { get; set; }
-        public string Value { get; set; }
-    }
-
-    public class ProgramException : Exception
-    {
-        public ErrorCodes ErrorCode { get; set; }
-        public string  ErrorMessage { get; set; }
-    }
-
-    public class ConfigSetting
-    {
-        public string Name { get; set; }
-        public string Value { get; set; }
-    }
-
+    /// <summary>
+    /// Core classes/models used throughout the application 
+    /// </summary>
+    /// 
     public enum HandlerNames
     {
         ConfigCreatorCommand,
@@ -153,6 +90,24 @@
         CONFIG_LOAD_ERROR,
         ARCHIVE_ERROR,
         FOLDER_SCAN
+    }
+
+    public class HandlerLoggingKeyValuePair
+    {
+        public string Key { get; set; }
+        public string Value { get; set; }
+    }
+
+    public class ProgramException : Exception
+    {
+        public ErrorCodes ErrorCode { get; set; }
+        public string  ErrorMessage { get; set; }
+    }
+
+    public class WriteConfigSettingModel
+    {
+        public string Name { get; set; }
+        public string Value { get; set; }
     }
 
 

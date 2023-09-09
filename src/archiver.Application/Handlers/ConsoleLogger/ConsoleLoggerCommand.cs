@@ -1,8 +1,6 @@
 ﻿namespace archiver.Application.Handlers.ConsoleLogger
 {
     using MediatR;
-    using System;
-    using System.Threading;
 
     public class ConsoleLoggerCommand : IRequest<Unit>
     {
