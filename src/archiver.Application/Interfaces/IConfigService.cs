@@ -7,5 +7,6 @@
         bool CheckConfigHasBeenTouched();
         bool CheckConfigDirectoriesExists();
         void LoadConfig();
+        void SetConsoleSize();
     }
 }

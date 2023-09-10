@@ -3,6 +3,7 @@
     using Application.Interfaces;
     using archiver.Core;
     using MediatR;
+    using System.Runtime.CompilerServices;
 
     public class FileArchiverCommand : IRequest<FileArchiverResponse>
     {
@@ -15,10 +16,12 @@
     public class FileArchiverHandler : IRequestHandler<FileArchiverCommand, FileArchiverResponse>
     {
         private readonly IConsoleService _consoleService;
+        private readonly IIOService _ioService;
 
-        public FileArchiverHandler(IConsoleService consoleService)
+        public FileArchiverHandler(IConsoleService consoleService, IIOService ioService)
         {
             _consoleService = consoleService;
+            _ioService = ioService;
         }
 
         public async Task<FileArchiverResponse> Handle(FileArchiverCommand request, CancellationToken cancellationToken)
@@ -34,9 +37,9 @@
                 var destinationDirectory = ProgramConfig.ReplaceDriveToArchiveContext(ProgramConfig.DestinationDrive.ToCharArray()[0], new DirectoryInfo(request.FileName).Parent.ToString());
 
                 // check - if not exists, create
-                if (!Directory.Exists(destinationDirectory))
+                if (!_ioService.CheckDirectoryExists(destinationDirectory))
                 {
-                    Directory.CreateDirectory(destinationDirectory);
+                    _ioService.CreateDirectory(destinationDirectory);
                 }
 
                 // get full destination filepath and create if not exists
@@ -48,9 +51,9 @@
                 // the DESTINATION FILE last modified is before the SOURCE FILE'S last modified
 
                 // Debug, remove after || 
-                if (!File.Exists(destPath) ) //  || (File.GetLastWriteTimeUtc(srcPath) > File.GetLastWriteTimeUtc(destPath)) )
+                if (!_ioService.CheckFileExists(destPath) ) //  || (File.GetLastWriteTimeUtc(srcPath) > File.GetLastWriteTimeUtc(destPath)) )
                 {
-                    File.Copy(srcPath, destPath);
+                    _ioService.CopyFile(srcPath, destPath);
                 }
 
                 return new FileArchiverResponse() { ArchiveSuccess = true };

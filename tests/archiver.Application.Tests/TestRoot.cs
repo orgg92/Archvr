@@ -13,6 +13,7 @@ namespace archiver.Application.Tests
 
         internal static IConfigService _configCreatorService;
         internal static IConsoleService _consoleService;
+        internal static IIOService _ioService;
         internal static IServiceScopeFactory _scopeFactory;
 
         [AssemblyInitialize]
@@ -28,6 +29,7 @@ namespace archiver.Application.Tests
 
             services
                 .RegisterMockReplacement(out _configCreatorService, true)
+                .RegisterMockReplacement(out _ioService, true)
                 .RegisterMockReplacement(out _consoleService, false)
                 ;
 

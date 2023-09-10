@@ -24,7 +24,7 @@
                 {
                     _configService.LoadConfig();
 
-                    SetConsoleSize();
+                    _configService.SetConsoleSize();
 
                     return new ConfigLoaderResponse() { ConfigLoaded = true };
                 }
@@ -38,16 +38,6 @@
             }
         }
 
-        public void SetConsoleSize()
-        {
-            if (System.Environment.OSVersion.Platform.ToString().ToLower().Contains("win"))
-            {
-                Console.SetWindowSize(ProgramConfig.ConsoleWidth, ProgramConfig.ConsoleHeight);
-            } else
-            {
-                ProgramConfig.ConsoleHeight = Console.WindowHeight;
-                ProgramConfig.ConsoleWidth = Console.WindowWidth;
-            }
-        }
+
     }
 }

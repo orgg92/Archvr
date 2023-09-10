@@ -30,6 +30,7 @@
                 .AddMediatR(AppDomain.CurrentDomain.GetAssemblies())
                 .AddTransient<IConfigService, ConfigService>()
                 .AddTransient<ILoggerService, LoggerService>()
+                .AddTransient<IIOService, IOService>()
                 .AddTransient<IConsoleService, ConsoleService>();
             ;
         }

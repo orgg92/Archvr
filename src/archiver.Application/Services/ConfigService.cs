@@ -19,7 +19,8 @@
             logPath = ProgramConfig.FilePathCreator(ProgramConfig.CurrentPath, ProgramConfig.LogPath);
             configPath = ProgramConfig.FilePathCreator(ProgramConfig.CurrentPath, ProgramConfig.ConfigDirectoryPath);
 
-            this.ConfigLocations = new Tuple<string, string>[] {
+            ConfigLocations = new Tuple<string, string>[] 
+            {
                 new Tuple<string, string> (logPath,   ProgramConfig.LogName),
                 new Tuple<string, string> (configPath,  ProgramConfig.DirListFileLocation), // only need 
                 new Tuple<string, string> (configPath,  ProgramConfig.ConfigFullPath )
@@ -31,7 +32,7 @@
             return Directory.Exists(ProgramConfig.ConfigDirectoryPath) && File.Exists(ProgramConfig.ConfigFullPath);
         }
 
-        //check file has been modified since it's creation, otherwise the file will only contain default config template so no point trying to load
+        //check file has been modified since it's creation, otherwise the file will only contain default config template so no point continuing
         public bool CheckConfigHasBeenTouched()
         {
             return File.GetCreationTimeUtc(ProgramConfig.ConfigFullPath) != File.GetLastWriteTimeUtc(ProgramConfig.ConfigFullPath);
@@ -111,8 +112,8 @@
             ProgramConfig.LogProgressToConsole = SelectConfigValue<bool>("LOG_PROGRESS_TO_CONSOLE");
             ProgramConfig.DirListFileLocation = SelectConfigValue<string>("DIRFILE_LOCATION");
             ProgramConfig.OutputLocation = SelectConfigValue<string>("OUTPUT_LOCATION");
-            ProgramConfig.ConsoleHeight = SelectConfigValue<int>("CONSOLE_HEIGHT");
-            ProgramConfig.ConsoleWidth = SelectConfigValue<int>("CONSOLE_WIDTH");
+            ProgramConfig.ConsoleHeight = SelectConfigValue<int>("CONSOLE_HEIGHT") == 0 ? 25 : SelectConfigValue<int>("CONSOLE_HEIGHT");
+            ProgramConfig.ConsoleWidth = SelectConfigValue<int>("CONSOLE_WIDTH") == 0 ? 100 : SelectConfigValue<int>("CONSOLE_WIDTH");
             ProgramConfig.ArchiveFolderName = SelectConfigValue<string>("ARCHIVE_FOLDER_NAME");
 
             ProgramConfig.ResponsiveSpacer = new String('*', ProgramConfig.ConsoleWidth);
@@ -122,7 +123,7 @@
         {
             bool boolResult;
             int intResult;
-            //return ProgramConfig.configValues.Where(x => x.Name == configSetting).First().Value;
+
             var value = ProgramConfig.configValues.Where(x => x.Name == configSetting).First().Value;
 
             // try parse bool
@@ -139,6 +140,19 @@
 
             // if not satisfied return string
             return value;
+        }
+
+        public virtual void SetConsoleSize()
+        {
+            if (System.Environment.OSVersion.Platform.ToString().ToLower().Contains("win"))
+            {
+                Console.SetWindowSize(ProgramConfig.ConsoleWidth, ProgramConfig.ConsoleHeight);
+            }
+            else
+            {
+                ProgramConfig.ConsoleHeight = Console.WindowHeight;
+                ProgramConfig.ConsoleWidth = Console.WindowWidth;
+            }
         }
     }
 }
