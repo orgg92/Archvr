@@ -9,23 +9,22 @@
 
         public static bool LogProgressToConsole;
 
-        public static int ConsoleHeight, ConsoleWidth;
+        public static int 
+            ConsoleHeight, 
+            ConsoleWidth, 
+            RetryCount;
+
 
         public static string FilePath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location),
              CurrentPath = AppDomain.CurrentDomain.BaseDirectory,
              TargetDrive = String.Empty,
              DestinationDrive = String.Empty,
-             Spacer = "************************************************************** \r\n",
-             WelcomeMessage = $"{Spacer} {SharedContent.ReturnFormattedDateTimeToString()}: Starting archive process \r\n{Spacer}",
              LogPath = FilePathCreator(CurrentPath, "Logs\\"),
              LogName = FilePathCreator(LogPath, "logfile.log"),
              ConfigDirectoryPath = FilePathCreator(CurrentPath, "Config\\"),
              ConfigFullPath = FilePathCreator(ConfigDirectoryPath, "config.ini"),
              DirListFileLocation = FilePathCreator(ConfigDirectoryPath, "directory-list.txt"),
-             UserDestinationDrive = String.Empty,
              OutputLocation = String.Empty,
-             RetryCount = String.Empty,
-             ProgressMeter = $"{0}% complete",
              ResponsiveSpacer = String.Empty,
              ArchiveFolderName = String.Empty,
              ArchivePath = String.Empty; // this is {targetDrive}/{archiveFolderName}/< full file path >

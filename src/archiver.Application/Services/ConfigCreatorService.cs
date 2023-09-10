@@ -28,7 +28,7 @@
 
         public bool CheckConfigExists()
         {
-            return Directory.Exists(ProgramConfig.ConfigDirectoryPath);
+            return Directory.Exists(ProgramConfig.ConfigDirectoryPath) && File.Exists(ProgramConfig.ConfigFullPath);
         }
 
         public void WriteNewConfigFile()
@@ -46,10 +46,9 @@
 
                 if (!File.Exists(filePath))
                 {
-
                     if (filePath.Contains("config.ini"))
                     {
-                        using (FileStream fs = File.Create(filePath))
+                        using (FileStream fs = File.Open(filePath, FileMode.OpenOrCreate))
                         {
                             using (StreamWriter sw = new StreamWriter(fs))
                             {
@@ -67,8 +66,7 @@
                     }
                     else
                     {
-
-                        // create blank files for writing later
+                        // if it's not config.ini: create blank file for writing later
 
                         File.Create(filePath);
                     }

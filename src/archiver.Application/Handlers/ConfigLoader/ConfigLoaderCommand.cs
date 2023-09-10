@@ -41,9 +41,27 @@
             return Directory.Exists(ProgramConfig.ConfigDirectoryPath) && Directory.Exists(ProgramConfig.LogPath);
         }
 
-        public static string SelectConfigValue(string configSetting)
+        public static dynamic SelectConfigValue<T>(string configSetting)
         {
-            return ProgramConfig.configValues.Where(x => x.Name == configSetting).First().Value;
+            bool boolResult;
+            int intResult;
+            //return ProgramConfig.configValues.Where(x => x.Name == configSetting).First().Value;
+            var value = ProgramConfig.configValues.Where(x => x.Name == configSetting).First().Value;
+
+            // try parse bool
+            if (bool.TryParse(value, out boolResult))
+            {
+                return boolResult;
+            }
+
+            // try parse int
+            if (int.TryParse(value, out intResult))
+            {
+                return intResult;
+            }
+
+            // if not satisfied return string
+            return value;
         }
 
         public void LoadConfig()
@@ -66,15 +84,15 @@
             // set global values for use throughout the application
             ProgramConfig.configValues = configSettings.ToArray();
 
-            ProgramConfig.TargetDrive = SelectConfigValue("TARGET_DRIVE");
-            ProgramConfig.DestinationDrive = SelectConfigValue("DESTINATION_DRIVE");
-            ProgramConfig.RetryCount = SelectConfigValue("RETRY_COUNT");
-            ProgramConfig.LogProgressToConsole = Boolean.TryParse(SelectConfigValue("LOG_PROGRESS_TO_CONSOLE"), out var result) ? result : false;
-            ProgramConfig.DirListFileLocation = SelectConfigValue("DIRFILE_LOCATION");
-            ProgramConfig.OutputLocation = SelectConfigValue("OUTPUT_LOCATION");
-            ProgramConfig.ConsoleHeight = int.TryParse(SelectConfigValue("CONSOLE_HEIGHT"), out int ch) ? ch : 25;
-            ProgramConfig.ConsoleWidth = int.TryParse(SelectConfigValue("CONSOLE_WIDTH"), out int cw) ? cw : 100;
-            ProgramConfig.ArchiveFolderName = SelectConfigValue("ARCHIVE_FOLDER_NAME");
+            ProgramConfig.TargetDrive = SelectConfigValue<string>("TARGET_DRIVE");
+            ProgramConfig.DestinationDrive = SelectConfigValue<string>("DESTINATION_DRIVE");
+            ProgramConfig.RetryCount = SelectConfigValue<int>("RETRY_COUNT");
+            ProgramConfig.LogProgressToConsole = SelectConfigValue<bool>("LOG_PROGRESS_TO_CONSOLE");
+            ProgramConfig.DirListFileLocation = SelectConfigValue<string>("DIRFILE_LOCATION");
+            ProgramConfig.OutputLocation = SelectConfigValue<string>("OUTPUT_LOCATION");
+            ProgramConfig.ConsoleHeight = SelectConfigValue<int>("CONSOLE_HEIGHT");
+            ProgramConfig.ConsoleWidth = SelectConfigValue<int>("CONSOLE_WIDTH");
+            ProgramConfig.ArchiveFolderName = SelectConfigValue<string>("ARCHIVE_FOLDER_NAME");
 
             SetConsoleSize();
 

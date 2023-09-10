@@ -15,8 +15,8 @@
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            var builder = new ConfigurationBuilder();
-            //.AddJsonFile("appsettings.json");
+            var builder = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json");
 
             Configuration = builder.Build();
         }
