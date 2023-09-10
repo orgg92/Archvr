@@ -20,7 +20,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "archiver.Infrastructure", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "archiver.Application.Tests", "tests\archiver.Application.Tests\archiver.Application.Tests.csproj", "{EE2C56E5-9296-4CD6-AAFA-AFEF4275EC48}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "archiver.tests", "tests\archiver.tests\archiver.tests.csproj", "{B7C6C354-BA64-448D-A7C9-D500627455E4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "archiver.Tests", "tests\archiver.tests\archiver.Tests.csproj", "{B7C6C354-BA64-448D-A7C9-D500627455E4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "archiver.Application", "src\archiver.Application\archiver.Application.csproj", "{1381BF2A-FAFD-4C87-AA5B-EC8C60E4A38F}"
 EndProject
