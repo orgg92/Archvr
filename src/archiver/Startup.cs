@@ -28,7 +28,7 @@
                 .AddSingleton<IConfiguration>(Configuration)
                 .AddTransient(typeof(IPipelineBehavior<,>), typeof(BaseHandlerPipelineBehaviour<,>))
                 .AddMediatR(AppDomain.CurrentDomain.GetAssemblies())
-                .AddTransient<IConfigCreatorService, ConfigCreatorService>()
+                .AddTransient<IConfigService, ConfigService>()
                 .AddTransient<ILoggerService, LoggerService>()
                 .AddTransient<IConsoleService, ConsoleService>();
             ;

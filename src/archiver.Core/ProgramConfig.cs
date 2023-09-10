@@ -7,6 +7,10 @@
     {
         public static IEnumerable<WriteConfigSettingModel> configValues;
 
+        /// <summary>
+        /// Variables imported from text file for use throughout the application
+        /// </summary>
+
         public static bool LogProgressToConsole;
 
         public static int 
@@ -31,7 +35,7 @@
 
         public static string FilePathCreator(string directory, string filePath)
         {
-            return System.IO.Path.Combine(directory, filePath).Replace(@"\\", @"\");
+            return Path.Combine(directory, filePath).Replace(@"\\", @"\");
         }
 
         public static string FormatDriveToStringContext()
@@ -51,7 +55,7 @@
             var fileName = Path.GetFileName(filepath);
             var drive = ProgramConfig.DestinationDrive;
             var archiveFolder = ProgramConfig.ArchiveFolderName;
-            return System.IO.Path.Combine($"{drive}:\\{archiveFolder}", fileName).Replace(@"\\", @"\");
+            return Path.Combine($"{drive}:\\{archiveFolder}", fileName).Replace(@"\\", @"\");
         }
     }
 

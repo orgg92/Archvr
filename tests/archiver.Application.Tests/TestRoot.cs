@@ -11,7 +11,7 @@ namespace archiver.Application.Tests
     public static class TestRoot
     {
 
-        internal static IConfigCreatorService _configCreatorService;
+        internal static IConfigService _configCreatorService;
         internal static IConsoleService _consoleService;
         internal static IServiceScopeFactory _scopeFactory;
 
