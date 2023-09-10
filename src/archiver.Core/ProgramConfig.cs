@@ -16,7 +16,9 @@
         public static int 
             ConsoleHeight, 
             ConsoleWidth, 
-            RetryCount;
+            RetryCount,
+            LogLevel
+           ;
 
 
         public static string FilePath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location),
@@ -31,7 +33,8 @@
              OutputLocation = String.Empty,
              ResponsiveSpacer = String.Empty,
              ArchiveFolderName = String.Empty,
-             ArchivePath = String.Empty; // this is {targetDrive}/{archiveFolderName}/< full file path >
+             ArchivePath = String.Empty // this is {targetDrive}/{archiveFolderName}/< full file path >
+            ; 
 
         public static string FilePathCreator(string directory, string filePath)
         {
@@ -108,7 +111,7 @@
             "25",
             "100",
             "Archive",
-            "0"
+            "0" // 0 = basic handler messages, 1 = file status info, 2 = verbose logging
         };
 
         public string[] baseConfigReadValueTypes = new string[]

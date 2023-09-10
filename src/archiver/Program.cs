@@ -1,6 +1,5 @@
 ﻿namespace archiver
 {
-    using archiver.Application;
     using archiver.Application.Handlers.ConfigCreator;
     using archiver.Application.Handlers.ConfigLoader;
     using archiver.Application.Handlers.FileArchiver;
@@ -43,7 +42,6 @@
             startup.ConfigureServices(services);
             IServiceProvider serviceProvider = services.BuildServiceProvider();
 
-
             _consoleService = serviceProvider
                 .GetService<IConsoleService>();
 
@@ -70,11 +68,7 @@
 
             if (configCreation.ConfigCreated == ConfigCreated.False)
             {
-                // load config if creation if config exists 
-
                 var configResult = await _mediator.Send(new ConfigLoaderCommand());
-
-                // scan config for source paths to archive
 
                 if (configResult.ConfigLoaded)
                 {
@@ -121,7 +115,6 @@
 
                 if (!processFile.ArchiveSuccess && !retryMode)
                 {
-                    // add to locked list
                     _lockedFiles.Add(file);
 
                 } else if (!processFile.ArchiveSuccess && retryMode)

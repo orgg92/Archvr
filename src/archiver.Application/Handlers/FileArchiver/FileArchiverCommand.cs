@@ -32,9 +32,10 @@
 
                 var message = $"{fileProgressMeter} {new String('-',25 - fileProgressMeter.Count())}> {request.FileName}";
 
+                await _consoleService.WriteToConsole(ProgramConfig.ResponsiveSpacer);
                 await _consoleService.WriteToConsole(message);
 
-                var destinationDirectory = ProgramConfig.ReplaceDriveToArchiveContext(ProgramConfig.DestinationDrive.ToCharArray()[0], new DirectoryInfo(request.FileName).Parent.ToString());
+                var destinationDirectory = _ioService.GetDestinationDirectory(request.FileName);
 
                 // check - if not exists, create
                 if (!_ioService.CheckDirectoryExists(destinationDirectory))
@@ -48,13 +49,21 @@
 
                 // if SOURCE VERSION OF THE DESTINATION FILE doesn't exist
                 // OR
-                // the DESTINATION FILE last modified is before the SOURCE FILE'S last modified
+                // the DESTINATION FILE last modified is before SOURCE FILE last modified
 
                 // Debug, remove after || 
-                if (!_ioService.CheckFileExists(destPath) ) //  || (File.GetLastWriteTimeUtc(srcPath) > File.GetLastWriteTimeUtc(destPath)) )
+                if (_ioService.CheckIfFileShouldBeUpdated(srcPath, destPath) )
                 {
+                    if (ProgramConfig.LogLevel > 0)
+                        await _consoleService.WriteToConsole("Source file is newer than archive file... Overwriting");
+
                     _ioService.CopyFile(srcPath, destPath);
                 }
+                else if (ProgramConfig.LogLevel > 0)
+                {
+                    await _consoleService.WriteToConsole($"Skipping file");
+                }
+
 
                 return new FileArchiverResponse() { ArchiveSuccess = true };
 

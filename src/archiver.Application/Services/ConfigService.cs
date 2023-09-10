@@ -115,6 +115,7 @@
             ProgramConfig.ConsoleHeight = SelectConfigValue<int>("CONSOLE_HEIGHT") == 0 ? 25 : SelectConfigValue<int>("CONSOLE_HEIGHT");
             ProgramConfig.ConsoleWidth = SelectConfigValue<int>("CONSOLE_WIDTH") == 0 ? 100 : SelectConfigValue<int>("CONSOLE_WIDTH");
             ProgramConfig.ArchiveFolderName = SelectConfigValue<string>("ARCHIVE_FOLDER_NAME");
+            ProgramConfig.LogLevel = SelectConfigValue<int>("LOG_LEVEL") ?? 0;
 
             ProgramConfig.ResponsiveSpacer = new String('*', ProgramConfig.ConsoleWidth);
         }

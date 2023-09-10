@@ -9,9 +9,12 @@
     public class FolderScannerHandler : IRequestHandler<FolderScannerCommand, FolderScannerResponse>
     {
         private readonly IIOService _ioService;
-        public FolderScannerHandler(IIOService ioService)
+        private readonly IConsoleService _consoleService;
+
+        public FolderScannerHandler(IIOService ioService, IConsoleService consoleService)
         {
             _ioService = ioService;
+            _consoleService = consoleService;
         }
 
         public async Task<FolderScannerResponse> Handle(FolderScannerCommand request, CancellationToken cancellationToken)
@@ -21,6 +24,8 @@
                 // read directories from DirListFileLocation [i.e. the text file of directories to archive]
 
                 var fileList = _ioService.ReturnFileList();
+
+                await _consoleService.WriteToConsole(SharedContent.ReturnDateFormattedConsoleMessage($"Found {fileList.Count()} file(s)"));
 
                 return new FolderScannerResponse() { FileList = fileList };
 

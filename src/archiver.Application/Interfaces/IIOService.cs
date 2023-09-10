@@ -11,5 +11,8 @@
         void CreateDirectory(string directory);
         IEnumerable<string> ReadConfigFileDirectoryList();
         List<string> ReturnFileList();
+        bool CheckIfFileShouldBeUpdated(string srcPath, string destPath);
+        string GetDestinationDirectory(string fileName);
+
     }
 }

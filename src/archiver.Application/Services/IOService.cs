@@ -2,6 +2,7 @@
 {
     using archiver.Application.Interfaces;
     using archiver.Core;
+    using MediatR;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -30,6 +31,11 @@
             return fileList;
         }
 
+        public bool CheckIfFileShouldBeUpdated(string srcPath, string destPath)
+        {
+            return CheckFileExists(srcPath) && CheckIfSrcFileIsNewerThanDestFile(srcPath, destPath);
+        }
+
         public bool CheckDirectoryExists(string directory)
         {
             return Directory.Exists(directory);
@@ -52,7 +58,19 @@
 
         public void CopyFile(string srcPath, string destPath)
         {
+            if (CheckFileExists(destPath))
+            {
+                File.Delete(destPath);
+            }
+
             File.Copy(srcPath, destPath);
         }
+
+        public string GetDestinationDirectory(string fileName)
+        {
+            return ProgramConfig.ReplaceDriveToArchiveContext(ProgramConfig.DestinationDrive.ToCharArray()[0], new DirectoryInfo(fileName).Parent.ToString());
+        }
+
+        
     }
 }
