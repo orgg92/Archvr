@@ -70,6 +70,11 @@
         {
             return $"[{DateTime.UtcNow.ToString("MM/dd/yyyy HH:mm")}]";
         }
+
+        public static string ReturnDateFormattedConsoleMessage(string message)
+        {
+            return $"{ReturnFormattedDateTimeToString()} {message}";
+        }
     }
 
     /// <summary>

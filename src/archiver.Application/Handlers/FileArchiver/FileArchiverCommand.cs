@@ -3,6 +3,7 @@
     using Application.Interfaces;
     using archiver.Core;
     using MediatR;
+    using System.Runtime.CompilerServices;
 
     public class FileArchiverCommand : IRequest<FileArchiverResponse>
     {
@@ -15,10 +16,12 @@
     public class FileArchiverHandler : IRequestHandler<FileArchiverCommand, FileArchiverResponse>
     {
         private readonly IConsoleService _consoleService;
+        private readonly IIOService _ioService;
 
-        public FileArchiverHandler(IConsoleService consoleService)
+        public FileArchiverHandler(IConsoleService consoleService, IIOService ioService)
         {
             _consoleService = consoleService;
+            _ioService = ioService;
         }
 
         public async Task<FileArchiverResponse> Handle(FileArchiverCommand request, CancellationToken cancellationToken)
@@ -29,14 +32,15 @@
 
                 var message = $"{fileProgressMeter} {new String('-',25 - fileProgressMeter.Count())}> {request.FileName}";
 
+                await _consoleService.WriteToConsole(ProgramConfig.ResponsiveSpacer);
                 await _consoleService.WriteToConsole(message);
 
-                var destinationDirectory = ProgramConfig.ReplaceDriveToArchiveContext(ProgramConfig.DestinationDrive.ToCharArray()[0], new DirectoryInfo(request.FileName).Parent.ToString());
+                var destinationDirectory = _ioService.GetDestinationDirectory(request.FileName);
 
                 // check - if not exists, create
-                if (!Directory.Exists(destinationDirectory))
+                if (!_ioService.CheckDirectoryExists(destinationDirectory))
                 {
-                    Directory.CreateDirectory(destinationDirectory);
+                    _ioService.CreateDirectory(destinationDirectory);
                 }
 
                 // get full destination filepath and create if not exists
@@ -45,13 +49,21 @@
 
                 // if SOURCE VERSION OF THE DESTINATION FILE doesn't exist
                 // OR
-                // the DESTINATION FILE last modified is before the SOURCE FILE'S last modified
+                // the DESTINATION FILE last modified is before SOURCE FILE last modified
 
                 // Debug, remove after || 
-                if (!File.Exists(destPath) ) //  || (File.GetLastWriteTimeUtc(srcPath) > File.GetLastWriteTimeUtc(destPath)) )
+                if (_ioService.CheckIfFileShouldBeUpdated(srcPath, destPath) )
                 {
-                    File.Copy(srcPath, destPath);
+                    if (ProgramConfig.LogLevel > 0)
+                        await _consoleService.WriteToConsole("Source file is newer than archive file... Overwriting");
+
+                    _ioService.CopyFile(srcPath, destPath);
                 }
+                else if (ProgramConfig.LogLevel > 0)
+                {
+                    await _consoleService.WriteToConsole($"Skipping file");
+                }
+
 
                 return new FileArchiverResponse() { ArchiveSuccess = true };
 

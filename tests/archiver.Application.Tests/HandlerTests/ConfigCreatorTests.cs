@@ -4,8 +4,11 @@
     using NSubstitute;
 
     [TestClass]
+    [TestCategory(TEST_DESCRIPTION)]
     public class ConfigCreatorTests : TestBase
     {
+        public const string TEST_DESCRIPTION = "ConfigCreator Handler Tests";
+
         private ConfigCreatorCommand _request;
 
         public ConfigCreatorTests()

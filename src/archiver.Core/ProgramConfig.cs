@@ -7,12 +7,18 @@
     {
         public static IEnumerable<WriteConfigSettingModel> configValues;
 
+        /// <summary>
+        /// Variables imported from text file for use throughout the application
+        /// </summary>
+
         public static bool LogProgressToConsole;
 
         public static int 
             ConsoleHeight, 
             ConsoleWidth, 
-            RetryCount;
+            RetryCount,
+            LogLevel
+           ;
 
 
         public static string FilePath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location),
@@ -27,11 +33,12 @@
              OutputLocation = String.Empty,
              ResponsiveSpacer = String.Empty,
              ArchiveFolderName = String.Empty,
-             ArchivePath = String.Empty; // this is {targetDrive}/{archiveFolderName}/< full file path >
+             ArchivePath = String.Empty // this is {targetDrive}/{archiveFolderName}/< full file path >
+            ; 
 
         public static string FilePathCreator(string directory, string filePath)
         {
-            return System.IO.Path.Combine(directory, filePath).Replace(@"\\", @"\");
+            return Path.Combine(directory, filePath).Replace(@"\\", @"\");
         }
 
         public static string FormatDriveToStringContext()
@@ -51,7 +58,7 @@
             var fileName = Path.GetFileName(filepath);
             var drive = ProgramConfig.DestinationDrive;
             var archiveFolder = ProgramConfig.ArchiveFolderName;
-            return System.IO.Path.Combine($"{drive}:\\{archiveFolder}", fileName).Replace(@"\\", @"\");
+            return Path.Combine($"{drive}:\\{archiveFolder}", fileName).Replace(@"\\", @"\");
         }
     }
 
@@ -104,7 +111,7 @@
             "25",
             "100",
             "Archive",
-            "0"
+            "0" // 0 = basic handler messages, 1 = file status info, 2 = verbose logging
         };
 
         public string[] baseConfigReadValueTypes = new string[]

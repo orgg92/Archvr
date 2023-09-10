@@ -8,10 +8,10 @@
 
     public class ConfigCreatorHandler : IRequestHandler<ConfigCreatorCommand, ConfigCreatorResponse>
     {
-        private readonly IConfigCreatorService _configCreatorService;
+        private readonly IConfigService _configCreatorService;
 
 
-        public ConfigCreatorHandler(IConfigCreatorService configCreatorService)
+        public ConfigCreatorHandler(IConfigService configCreatorService)
         {
             _configCreatorService = configCreatorService;
         }
