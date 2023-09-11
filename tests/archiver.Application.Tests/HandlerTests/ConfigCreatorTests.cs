@@ -32,21 +32,21 @@
         [TestMethod]
         public async Task IfConfigExists_DoNotCreate()
         {
-            _configCreatorService.CheckConfigExists().Returns(true);
+            _configService.CheckConfigExists().Returns(true);
 
             await SendAsync(_request);
 
-            _configCreatorService.DidNotReceive().WriteNewConfigFile();
+            _configService.DidNotReceive().WriteNewConfigFile();
         }
 
         [TestMethod]
         public async Task IfConfigNotExists_Create()
         {
-            _configCreatorService.CheckConfigExists().Returns(false);
+            _configService.CheckConfigExists().Returns(false);
 
             await SendAsync(_request);
 
-            _configCreatorService.Received().WriteNewConfigFile();
+            _configService.Received().WriteNewConfigFile();
 
         }
     }

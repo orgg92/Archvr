@@ -1,4 +1,4 @@
-namespace archiver.Application.Tests
+namespace archiver.Tests
 {
     using archiver;
     using archiver.Application.Interfaces;
@@ -12,7 +12,7 @@ namespace archiver.Application.Tests
     public static class TestRoot
     {
 
-        internal static IConfigService _configService;
+        internal static IConfigService _configCreatorService;
         internal static IConsoleService _consoleService;
         internal static IIOService _ioService;
         internal static IServiceScopeFactory _scopeFactory;
@@ -29,7 +29,7 @@ namespace archiver.Application.Tests
             startup.ConfigureServices(services);
 
             services
-                .RegisterMockReplacement(out _configService, true)
+                .RegisterMockReplacement(out _configCreatorService, true)
                 .RegisterMockReplacement(out _ioService, true)
                 .RegisterMockReplacement(out _consoleService, false)
                 ;

@@ -9,7 +9,7 @@
         public virtual async Task Initialize()
         {
             // needed or running all tests together start failing
-            _configCreatorService.ClearReceivedCalls();
+            _configService.ClearReceivedCalls();
             _ioService.ClearReceivedCalls();
         }
     }
