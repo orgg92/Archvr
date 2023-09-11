@@ -77,10 +77,6 @@
         }
     }
 
-    /// <summary>
-    /// Core classes/models used throughout the application 
-    /// </summary>
-    /// 
     public enum HandlerNames
     {
         ConfigCreatorCommand,

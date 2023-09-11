@@ -31,14 +31,12 @@
                     var bytes = Encoding.UTF8.GetBytes(textString + "\r\n");
                     await fs.WriteAsync(bytes);
                 };
-            } catch (IOException e)
+            }
+            catch (IOException e)
             {
 
             }
-
-                //File.AppendAllText(LogFilePath, textString + "\r\n");
         }
-
 
     }
 }
