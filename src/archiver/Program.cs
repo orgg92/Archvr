@@ -93,11 +93,8 @@
 
             else if (configCreation.ConfigCreated == ConfigCreated.True)
             {
-
                 await _consoleService.WriteToConsole("Config created but requires user setup");
                 // user needs to setup their config file after creation
-
-
             }
 
             await _consoleService.WriteToConsole("\r\n" + ProgramConfig.ResponsiveSpacer);
