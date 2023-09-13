@@ -2,8 +2,9 @@
 {
     using Application.Interfaces;
     using archiver.Core;
+    using archiver.Core.Enum;
+    using archiver.Infrastructure.Interfaces;
     using MediatR;
-    using System.Runtime.CompilerServices;
 
     public class FileArchiverCommand : IRequest<FileArchiverResponse>
     {
@@ -28,12 +29,6 @@
         {
             try
             {
-                var fileProgressMeter = $"[{request.FileNumber}/{request.TotalFiles}]";
-
-                var message = $"{fileProgressMeter} {new String('-',25 - fileProgressMeter.Count())}> {request.FileName}";
-
-                await _consoleService.WriteToConsole(ProgramConfig.ResponsiveSpacer);
-                await _consoleService.WriteToConsole(message);
 
                 var destinationDirectory = _ioService.GetDestinationDirectory(request.FileName);
 
@@ -55,13 +50,13 @@
                 if (_ioService.CheckIfFileShouldBeUpdated(srcPath, destPath) )
                 {
                     if (ProgramConfig.LogLevel > 0)
-                        await _consoleService.WriteToConsole("Source file is newer than archive file... Overwriting");
+                        await _consoleService.WriteToConsole("Source file is newer than archive file... Overwriting", Infrastructure.Services.LoggingLevel.BASIC_MESSAGES);
 
                     _ioService.CopyFile(srcPath, destPath);
                 }
                 else if (ProgramConfig.LogLevel > 0)
                 {
-                    await _consoleService.WriteToConsole($"Skipping file");
+                    await _consoleService.WriteToConsole($"Skipping file", Infrastructure.Services.LoggingLevel.BASIC_MESSAGES);
                 }
 
 

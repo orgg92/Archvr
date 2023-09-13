@@ -1,7 +1,8 @@
 ﻿namespace archiver.Application.Common
 {
-    using archiver.Application.Interfaces;
     using archiver.Core;
+    using archiver.Core.Enum;
+    using archiver.Infrastructure.Interfaces;
     using MediatR;
     using System.Threading.Tasks;
 
@@ -31,7 +32,7 @@
                 {
                     // find the logging announcement and write to console
                     var handlerMessage = SharedContent.ReturnMessageForHandler(handlerName);
-                    await _consoleService.WriteToConsole($"{SharedContent.ReturnFormattedDateTimeToString()} {handlerMessage}");
+                    await _consoleService.WriteToConsole($"{SharedContent.ReturnFormattedDateTimeToString()} {handlerMessage}", Infrastructure.Services.LoggingLevel.BASIC_MESSAGES);
                 }
 
                 var response = await next();
@@ -43,7 +44,7 @@
             catch (ProgramException e)
             {
                 await _consoleService.WriteToConsole
-                    ($"{SharedContent.ReturnFormattedDateTimeToString()} {SharedContent.ReturnErrorMessageForErrorCode(e.ErrorCode.ToString())}");
+                    ($"{SharedContent.ReturnFormattedDateTimeToString()} {SharedContent.ReturnErrorMessageForErrorCode(e.ErrorCode.ToString())}", Infrastructure.Services.LoggingLevel.BASIC_MESSAGES);
 
                 throw e;
             }

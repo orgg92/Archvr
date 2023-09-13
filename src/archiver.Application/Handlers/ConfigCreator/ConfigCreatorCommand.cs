@@ -2,6 +2,7 @@
 {
     using archiver.Application.Interfaces;
     using archiver.Core;
+    using archiver.Core.Enum;
     using MediatR;
 
     public class ConfigCreatorCommand : IRequest<ConfigCreatorResponse> { }

@@ -2,6 +2,7 @@ namespace archiver.Tests
 {
     using archiver;
     using archiver.Application.Interfaces;
+    using archiver.Infrastructure.Interfaces;
     using MediatR;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;

@@ -1,5 +1,6 @@
 ﻿namespace archiver.Core
 {
+    using archiver.Core.Enum;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -75,22 +76,6 @@
         {
             return $"{ReturnFormattedDateTimeToString()} {message}";
         }
-    }
-
-    public enum HandlerNames
-    {
-        ConfigCreatorCommand,
-        ConfigLoaderCommand,
-        FileArchiverCommand,
-        FolderScannerCommand
-    }
-
-    public enum ErrorCodes
-    {
-        CONFIG_CREATION_ERROR,
-        CONFIG_LOAD_ERROR,
-        ARCHIVE_ERROR,
-        FOLDER_SCAN
     }
 
     public class HandlerLoggingKeyValuePair

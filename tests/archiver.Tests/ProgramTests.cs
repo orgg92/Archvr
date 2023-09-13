@@ -5,6 +5,7 @@
     using archiver.Application.Handlers.FileArchiver;
     using archiver.Application.Handlers.FolderScanner;
     using archiver.Application.Interfaces;
+    using archiver.Infrastructure.Interfaces;
     using MediatR;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using NSubstitute;

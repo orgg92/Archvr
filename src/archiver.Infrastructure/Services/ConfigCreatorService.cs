@@ -1,12 +1,7 @@
 ﻿namespace archiver.Infrastructure.Interfaces
 {
     using archiver.Core;
-    using archiver.Infrastructure.Interfaces;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     public class ConfigCreatorService : IConfigCreatorService
     {
@@ -82,7 +77,6 @@
                     }
                     else
                     {
-
                         // create blank files for writing later
 
                         File.Create(filePath);
