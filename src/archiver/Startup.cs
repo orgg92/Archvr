@@ -16,15 +16,13 @@
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            var builder = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json");
+            var builder = new ConfigurationBuilder();
 
             Configuration = builder.Build();
         }
 
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddLogging();
             services
                 .AddSingleton<IConfiguration>(Configuration)
                 .AddTransient(typeof(IPipelineBehavior<,>), typeof(BaseHandlerPipelineBehaviour<,>))
