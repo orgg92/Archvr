@@ -10,7 +10,7 @@
         void CopyFile(string srcPath, string destPath);
         void CreateDirectory(string directory);
         IEnumerable<string> ReadConfigFileDirectoryList();
-        List<string> ReturnFileList();
+        string[] ReturnFileList(string directory);
         bool CheckIfFileShouldBeUpdated(string srcPath, string destPath);
         string GetDestinationDirectory(string fileName);
 

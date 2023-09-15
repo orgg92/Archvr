@@ -18,17 +18,9 @@
             return File.ReadAllLines(ProgramConfig.DirListFileLocation);
         }
 
-        public List<string> ReturnFileList()
+        public string[] ReturnFileList(string directory)
         {
-            var folderList = ReadConfigFileDirectoryList();
-            var fileList = new List<string>();
-
-            foreach (var directory in folderList)
-            {
-                fileList.AddRange(Directory.EnumerateFiles(ProgramConfig.FilePathCreator(ProgramConfig.FormatDriveToStringContext(), directory)));
-            }
-
-            return fileList;
+            return Directory.EnumerateFiles(ProgramConfig.FilePathCreator(ProgramConfig.FormatDriveToStringContext(), directory)).ToArray();
         }
 
         public bool CheckIfFileShouldBeUpdated(string srcPath, string destPath)

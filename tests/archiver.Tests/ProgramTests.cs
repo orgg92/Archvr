@@ -18,6 +18,7 @@
         private IMediator _mockMediator;
         private IConsoleService _mockConsoleService;
         private Program _program;
+        private List<string> _fileList;
 
         [TestInitialize]
         public async Task Initialize()
@@ -25,16 +26,13 @@
             _mockMediator = Substitute.For<IMediator>();
             _mockConsoleService = Substitute.For<IConsoleService>();
             _program = new Program(_mockMediator, _mockConsoleService);
+
+            _fileList = new List<string>();
         }
 
         [TestMethod]
         public async Task WhenAllTrue_FollowHappyPath()
         {
-            var testFileName = "test_file.txt";
-            var fileList = new List<string>()
-            {
-                testFileName
-            };
 
             _mockMediator.When(x => x.Send(Arg.Any<ConfigCreatorCommand>()).Returns(new ConfigCreatorResponse()
             {
@@ -50,7 +48,7 @@
 
             _mockMediator.When(x => x.Send(Arg.Any<FolderScannerCommand>()).Returns(new FolderScannerResponse()
             {
-                FileList = fileList,
+                FileList = _fileList,
                 HandlerException = null
             })) ;
 
@@ -59,7 +57,6 @@
                ArchiveSuccess = true,
                HandlerException = null
             }));
-
         }
     }
 }
