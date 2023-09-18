@@ -1,62 +1,48 @@
 ﻿namespace archiver.Tests
 {
-    using archiver.Application.Handlers.ConfigCreator;
-    using archiver.Application.Handlers.ConfigLoader;
-    using archiver.Application.Handlers.FileArchiver;
-    using archiver.Application.Handlers.FolderScanner;
     using archiver.Application.Interfaces;
     using archiver.Infrastructure.Interfaces;
     using MediatR;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using static archiver.Tests.TestRoot;
     using NSubstitute;
-    using System.Collections;
+    using archiver.Application.Handlers.ConfigCreator;
+    using archiver.Application.Handlers.ConfigLoader;
+
+    /// <summary>
+    /// Tests of the main class
+    /// </summary>
 
     [TestClass]
     [TestCategory("Program Tests")]
-    public class ProgramTests
+    public class ProgramTests : TestBase
     {
-        private IMediator _mockMediator;
-        private IConsoleService _mockConsoleService;
-        private Program _program;
-        private List<string> _fileList;
-
         [TestInitialize]
         public async Task Initialize()
         {
-            _mockMediator = Substitute.For<IMediator>();
-            _mockConsoleService = Substitute.For<IConsoleService>();
-            _program = new Program(_mockMediator, _mockConsoleService);
-
-            _fileList = new List<string>();
+            base.Initialize();            
         }
 
+
+        /// <summary>
+        /// Failed config creation means the program can't continue
+        /// </summary>
         [TestMethod]
-        public async Task WhenAllTrue_FollowHappyPath()
+        public async Task IfConfigCreationFails_ShouldNotContinue()
         {
+            _archiver.CreateConfig().Returns(new ConfigCreatorResponse() { ConfigCreated = ConfigCreated.False });
 
-            _mockMediator.When(x => x.Send(Arg.Any<ConfigCreatorCommand>()).Returns(new ConfigCreatorResponse()
-            {
-                ConfigCreated = ConfigCreated.True,
-                HandlerException = null
-            }));
 
-            _mockMediator.When(x => x.Send(Arg.Any<ConfigLoaderCommand>()).Returns(new ConfigLoaderResponse()
-            {
-                ConfigLoaded = true,
-                HandlerException = null
-            }));
+            await _archiver.Initialize();
 
-            _mockMediator.When(x => x.Send(Arg.Any<FolderScannerCommand>()).Returns(new FolderScannerResponse()
-            {
-                FileList = _fileList,
-                HandlerException = null
-            })) ;
 
-            _mockMediator.When(x => x.Send(Arg.Any<FileArchiverCommand>()).Returns(new FileArchiverResponse()
-            {
-               ArchiveSuccess = true,
-               HandlerException = null
-            }));
+            await _archiver.Received().LoadConfig();
+            await _archiver.Received().ScanDirectories();
+            await _archiver.Received().ProcessFileList(Arg.Any<string[]>(), Arg.Any<bool>());
+
         }
+
     }
 }

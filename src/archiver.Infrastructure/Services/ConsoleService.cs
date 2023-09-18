@@ -41,6 +41,17 @@
             return ProgramConfig.LogLevel == (int)loggingLevel;
         }
 
+        public async Task ClearConsole()
+        {
+            Console.Clear();
+        }
+
+        public async Task SetConsoleSize()
+        {
+            ProgramConfig.ConsoleWidth = Console.WindowWidth;
+            ProgramConfig.ResponsiveSpacer = new String('*', ProgramConfig.ConsoleWidth);
+        }
+
     }
 
     public enum LoggingLevel

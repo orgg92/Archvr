@@ -75,7 +75,7 @@ namespace archiver.Application.Tests
                 throw new DI_Exception();
             }
 
-            services.AddTransient(provider => mockInstance);
+            services.AddSingleton(provider => mockInstance);
 
             return services;
         }

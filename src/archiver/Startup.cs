@@ -25,12 +25,13 @@
         {
             services
                 .AddSingleton<IConfiguration>(Configuration)
-                .AddTransient(typeof(IPipelineBehavior<,>), typeof(BaseHandlerPipelineBehaviour<,>))
                 .AddMediatR(AppDomain.CurrentDomain.GetAssemblies())
+                .AddTransient(typeof(IPipelineBehavior<,>), typeof(BaseHandlerPipelineBehaviour<,>))
+                .AddTransient<IArchiver, Archiver>()
                 .AddTransient<IConfigService, ConfigService>()
                 .AddTransient<ILoggerService, LoggerService>()
                 .AddTransient<IIOService, IOService>()
-                .AddTransient<IConsoleService, ConsoleService>();
+                .AddTransient<IConsoleService, ConsoleService>()
             ;
         }
 

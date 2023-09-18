@@ -6,5 +6,7 @@
     {
         string GetUserInput();
         Task WriteToConsole(string textString, LoggingLevel loggingLevel);
+        Task ClearConsole();
+        Task SetConsoleSize();
     }
 }

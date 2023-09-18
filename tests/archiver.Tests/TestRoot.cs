@@ -13,10 +13,12 @@ namespace archiver.Tests
     public static class TestRoot
     {
 
-        internal static IConfigService _configCreatorService;
+        internal static IConfigService _configService;
         internal static IConsoleService _consoleService;
         internal static IIOService _ioService;
         internal static IServiceScopeFactory _scopeFactory;
+        internal static IMediator _mediator;
+        internal static IArchiver _archiver;
 
         [AssemblyInitialize]
         public static void Initialize(TestContext testContext)
@@ -30,12 +32,16 @@ namespace archiver.Tests
             startup.ConfigureServices(services);
 
             services
-                .RegisterMockReplacement(out _configCreatorService, true)
+                .RegisterMockReplacement(out _configService, true)
                 .RegisterMockReplacement(out _ioService, true)
-                .RegisterMockReplacement(out _consoleService, false)
+                .RegisterMockReplacement(out _consoleService, true)
+                .RegisterMockReplacement(out _mediator, true)
+                //.RegisterMockReplacement(out _archiver, true)
                 ;
 
+
             _scopeFactory = services.BuildServiceProvider().GetRequiredService<IServiceScopeFactory>();
+            _archiver = services.BuildServiceProvider().GetRequiredService<IArchiver>();
 
         }
 
@@ -43,9 +49,9 @@ namespace archiver.Tests
         {
             using var scope = _scopeFactory.CreateScope();
 
-            var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+            _mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
 
-            return await mediator.Send(request);
+            return await _mediator.Send(request);
         }
 
 
