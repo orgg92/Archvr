@@ -16,8 +16,8 @@
     public class Archiver : IArchiver
     {
 
-        public IMediator _mediator;
-        public IConsoleService _consoleService;
+        private IMediator _mediator;
+        private IConsoleService _consoleService;
 
         public static List<string> _lockedFiles;
 

@@ -44,11 +44,11 @@
 
         static async Task Main(string[] args)
         {
-            var archiver = new Archiver(_mediator, _consoleService);
 
             Initialize();
-            await archiver.Initialize();
+            var archiver = new Archiver(_mediator, _consoleService);
 
+            await archiver.Initialize();
 
         }
     }
