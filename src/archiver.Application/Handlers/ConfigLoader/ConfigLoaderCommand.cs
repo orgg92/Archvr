@@ -33,7 +33,8 @@
                 {
                     return new ConfigLoaderResponse() { ConfigLoaded = false };
                 }
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 throw new ProgramException() { ErrorCode = ErrorCodes.CONFIG_LOAD_ERROR, ErrorMessage = e.Message };
             }

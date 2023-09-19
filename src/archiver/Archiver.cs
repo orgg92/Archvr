@@ -4,15 +4,14 @@
     using archiver.Application.Handlers.ConfigLoader;
     using archiver.Application.Handlers.FileArchiver;
     using archiver.Application.Handlers.FolderScanner;
-    using archiver.Core.Enum;
     using archiver.Core;
+    using archiver.Core.Enum;
+    using archiver.Infrastructure.Interfaces;
+    using MediatR;
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
-    using archiver.Infrastructure.Interfaces;
-    using MediatR;
 
     public class Archiver : IArchiver
     {
@@ -30,19 +29,24 @@
             _lockedFiles = new List<string>();
         }
 
-        public async Task<ConfigCreatorResponse> CreateConfig()
+        public virtual async Task<ConfigCreatorResponse> CreateConfig()
         {
             return await _mediator.Send(new ConfigCreatorCommand());
         }
 
-        public async Task<ConfigLoaderResponse> LoadConfig()
+        public virtual async Task<ConfigLoaderResponse> LoadConfig()
         {
             return await _mediator.Send(new ConfigLoaderCommand());
         }
 
-        public async Task<FolderScannerResponse> ScanDirectories()
+        public virtual async Task<FolderScannerResponse> ScanDirectories()
         {
             return await _mediator.Send(new FolderScannerCommand());
+        }
+
+        public virtual async Task<FileArchiverResponse> ArchiveFile(string fileName, int fileNumber = 0, int totalFiles = 0)
+        {
+            return await _mediator.Send(new FileArchiverCommand() { FileName = fileName, FileNumber = fileNumber, TotalFiles = totalFiles });
         }
 
         public async Task Initialize()
@@ -67,13 +71,12 @@
 
                     await ProcessFileList(result.FileList);
 
-
                     // Handle files which were locked or unavailable during the first pass
                     if (_lockedFiles.Any())
                     {
                         foreach (var file in _lockedFiles)
                         {
-                            var processFile = await _mediator.Send(new FileArchiverCommand() { FileName = file });
+                            var processFile = await ArchiveFile(file);
                         }
                     }
                 }
@@ -110,7 +113,8 @@
 
                 await _consoleService.WriteToConsole(message, Infrastructure.Services.LoggingLevel.FILE_STATUS);
 
-                var processFile = await _mediator.Send(new FileArchiverCommand() { FileName = file, FileNumber = i + 1, TotalFiles = fileList.Count() });
+                //var processFile = await _mediator.Send(new FileArchiverCommand() { FileName = file, FileNumber = i + 1, TotalFiles = fileList.Count() });
+                var processFile = await ArchiveFile(file, i + 1, fileList.Count());
 
                 if (!processFile.ArchiveSuccess && !retryMode)
                 {

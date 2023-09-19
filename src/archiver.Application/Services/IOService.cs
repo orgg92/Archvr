@@ -2,12 +2,8 @@
 {
     using archiver.Application.Interfaces;
     using archiver.Core;
-    using MediatR;
-    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     public class IOService : IIOService
     {
@@ -63,6 +59,6 @@
             return ProgramConfig.ReplaceDriveToArchiveContext(ProgramConfig.DestinationDrive.ToCharArray()[0], new DirectoryInfo(fileName).Parent.ToString());
         }
 
-        
+
     }
 }

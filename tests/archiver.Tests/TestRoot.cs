@@ -18,7 +18,6 @@ namespace archiver.Tests
         internal static IIOService _ioService;
         internal static IServiceScopeFactory _scopeFactory;
         internal static IMediator _mediator;
-        internal static IArchiver _archiver;
 
         [AssemblyInitialize]
         public static void Initialize(TestContext testContext)
@@ -36,12 +35,10 @@ namespace archiver.Tests
                 .RegisterMockReplacement(out _ioService, true)
                 .RegisterMockReplacement(out _consoleService, true)
                 .RegisterMockReplacement(out _mediator, true)
-                //.RegisterMockReplacement(out _archiver, true)
                 ;
 
 
             _scopeFactory = services.BuildServiceProvider().GetRequiredService<IServiceScopeFactory>();
-            _archiver = services.BuildServiceProvider().GetRequiredService<IArchiver>();
 
         }
 
@@ -55,15 +52,15 @@ namespace archiver.Tests
         }
 
 
-        public static IServiceCollection RegisterMockReplacement<TMock>( 
-            this IServiceCollection services, 
+        public static IServiceCollection RegisterMockReplacement<TMock>(
+            this IServiceCollection services,
             out TMock mockInstance,
             bool throwIfExistingDependencyIsMissing)
             where TMock : class
         {
             mockInstance = Substitute.For<TMock>();
             return services.RegisterMockReplacement(mockInstance, throwIfExistingDependencyIsMissing);
-        } 
+        }
 
         public static IServiceCollection RegisterMockReplacement<TMock>(
             this IServiceCollection services,
@@ -76,7 +73,8 @@ namespace archiver.Tests
             if (descriptor is not null)
             {
                 services.Remove(descriptor);
-            } else if (throwIfExistingDependencyIsMissing)
+            }
+            else if (throwIfExistingDependencyIsMissing)
             {
                 throw new DI_Exception();
             }
@@ -85,7 +83,7 @@ namespace archiver.Tests
 
             return services;
         }
-            
+
 
     }
 

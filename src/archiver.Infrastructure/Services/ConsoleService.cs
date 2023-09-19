@@ -32,7 +32,7 @@
 
         public async Task WriteToLogFile(string textString)
         {
-           await _loggerService.WriteConsoleMessageToLogFile(textString);
+            await _loggerService.WriteConsoleMessageToLogFile(textString);
         }
 
         public bool ShouldMessageBeLogged(LoggingLevel loggingLevel)

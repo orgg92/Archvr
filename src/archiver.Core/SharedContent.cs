@@ -87,7 +87,7 @@
     public class ProgramException : Exception
     {
         public ErrorCodes ErrorCode { get; set; }
-        public string  ErrorMessage { get; set; }
+        public string ErrorMessage { get; set; }
     }
 
     public class WriteConfigSettingModel

@@ -17,7 +17,7 @@
         public FolderScannerHandler(IIOService ioService, IConsoleService consoleService)
         {
             _ioService = ioService;
-            _consoleService = consoleService;   
+            _consoleService = consoleService;
 
             _fileList = new List<string>();
         }
@@ -34,18 +34,21 @@
                     if (_ioService.CheckDirectoryExists(folder))
                     {
                         _fileList.AddRange(_ioService.ReturnFileList(folder));
-                    } else {
+                    }
+                    else
+                    {
                         // inform the folder does not exist and will not be archived
-                       await _consoleService.WriteToConsole(
-                           SharedContent.ReturnDateFormattedConsoleMessage($"Directory does not exist and will be skipped: {folder}"),
-                           Infrastructure.Services.LoggingLevel.BASIC_MESSAGES
-                        );
+                        await _consoleService.WriteToConsole(
+                            SharedContent.ReturnDateFormattedConsoleMessage($"Directory does not exist and will be skipped: {folder}"),
+                            Infrastructure.Services.LoggingLevel.BASIC_MESSAGES
+                         );
                     }
                 }
 
                 return new FolderScannerResponse() { FileList = _fileList };
 
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 throw new ProgramException() { ErrorCode = ErrorCodes.FOLDER_SCAN, ErrorMessage = e.Message };
             }

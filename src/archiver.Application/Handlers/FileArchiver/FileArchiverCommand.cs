@@ -47,7 +47,7 @@
                 // the DESTINATION FILE last modified is before SOURCE FILE last modified
 
                 // Debug, remove after || 
-                if (_ioService.CheckIfFileShouldBeUpdated(srcPath, destPath) )
+                if (_ioService.CheckIfFileShouldBeUpdated(srcPath, destPath))
                 {
                     if (ProgramConfig.LogLevel > 0)
                         await _consoleService.WriteToConsole("Source file is newer than archive file... Overwriting", Infrastructure.Services.LoggingLevel.BASIC_MESSAGES);
@@ -62,11 +62,12 @@
 
                 return new FileArchiverResponse() { ArchiveSuccess = true };
 
-            } catch (Exception e)
+            }
+            catch (Exception)
             {
-                var exception = new ProgramException() { ErrorCode = ErrorCodes.ARCHIVE_ERROR, ErrorMessage = SharedContent.ReturnErrorMessageForErrorCode(ErrorCodes.ARCHIVE_ERROR.ToString()).Replace("{0}", request.FileName ) };
+                var exception = new ProgramException() { ErrorCode = ErrorCodes.ARCHIVE_ERROR, ErrorMessage = SharedContent.ReturnErrorMessageForErrorCode(ErrorCodes.ARCHIVE_ERROR.ToString()).Replace("{0}", request.FileName) };
 
-                return new FileArchiverResponse() { ArchiveSuccess = false, HandlerException = exception };    
+                return new FileArchiverResponse() { ArchiveSuccess = false, HandlerException = exception };
             }
 
         }

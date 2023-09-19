@@ -19,7 +19,7 @@
             logPath = ProgramConfig.FilePathCreator(ProgramConfig.CurrentPath, ProgramConfig.LogPath);
             configPath = ProgramConfig.FilePathCreator(ProgramConfig.CurrentPath, ProgramConfig.ConfigDirectoryPath);
 
-            ConfigLocations = new Tuple<string, string>[] 
+            ConfigLocations = new Tuple<string, string>[]
             {
                 new Tuple<string, string> (logPath,   ProgramConfig.LogName),
                 new Tuple<string, string> (configPath,  ProgramConfig.DirListFileLocation), // only need 

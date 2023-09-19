@@ -49,15 +49,15 @@ namespace archiver.Application.Tests
         }
 
 
-        public static IServiceCollection RegisterMockReplacement<TMock>( 
-            this IServiceCollection services, 
+        public static IServiceCollection RegisterMockReplacement<TMock>(
+            this IServiceCollection services,
             out TMock mockInstance,
             bool throwIfExistingDependencyIsMissing)
             where TMock : class
         {
             mockInstance = Substitute.For<TMock>();
             return services.RegisterMockReplacement(mockInstance, throwIfExistingDependencyIsMissing);
-        } 
+        }
 
         public static IServiceCollection RegisterMockReplacement<TMock>(
             this IServiceCollection services,
@@ -70,7 +70,8 @@ namespace archiver.Application.Tests
             if (descriptor is not null)
             {
                 services.Remove(descriptor);
-            } else if (throwIfExistingDependencyIsMissing)
+            }
+            else if (throwIfExistingDependencyIsMissing)
             {
                 throw new DI_Exception();
             }
@@ -79,7 +80,7 @@ namespace archiver.Application.Tests
 
             return services;
         }
-            
+
 
     }
 
