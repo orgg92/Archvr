@@ -54,7 +54,27 @@
         }
 
         /// <summary>
-        /// Config creation should not proceed further than the config creation step
+        /// Failed config load means the program can't continue
+        /// </summary>
+        /// 
+
+        [TestMethod]
+        public async Task IfConfigLoadingFails_ShouldNotRunToCompletion()
+        {
+            _archiver.CreateConfig().Returns(new ConfigCreatorResponse() { ConfigCreated = ConfigCreated.False });
+            _archiver.LoadConfig().Returns(new ConfigLoaderResponse() { ConfigLoaded = false, HandlerException = null });
+
+            await _archiver.Initialize();
+
+            await _archiver.Received().CreateConfig();
+            await _archiver.Received().LoadConfig();
+            await _archiver.DidNotReceive().ScanDirectories();
+            await _archiver.DidNotReceive().ArchiveFile(Arg.Any<string>(), Arg.Any<int>(), Arg.Any<int>());
+
+        }
+
+        /// <summary>
+        /// Program should run to completion
         /// </summary>
         /// 
 
