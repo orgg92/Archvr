@@ -13,9 +13,9 @@
 
         public static bool LogProgressToConsole;
 
-        public static int 
-            ConsoleHeight, 
-            ConsoleWidth, 
+        public static int
+            ConsoleHeight,
+            ConsoleWidth,
             RetryCount,
             LogLevel
            ;
@@ -34,7 +34,7 @@
              ResponsiveSpacer = String.Empty,
              ArchiveFolderName = String.Empty,
              ArchivePath = String.Empty // this is {targetDrive}/{archiveFolderName}/< full file path >
-            ; 
+            ;
 
         public static string FilePathCreator(string directory, string filePath)
         {
@@ -56,6 +56,7 @@
         public static string GetFullArchiveAndFilePath(string filepath)
         {
             var fileName = Path.GetFileName(filepath);
+            var folderName = Path.GetDirectoryName(filepath);
             var drive = ProgramConfig.DestinationDrive;
             var archiveFolder = ProgramConfig.ArchiveFolderName;
             return Path.Combine($"{drive}:\\{archiveFolder}", fileName).Replace(@"\\", @"\");

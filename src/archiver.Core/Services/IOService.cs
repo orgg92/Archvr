@@ -1,13 +1,9 @@
-﻿namespace archiver.Application.Services
+﻿namespace archiver.Core.Services
 {
-    using archiver.Application.Interfaces;
     using archiver.Core;
-    using MediatR;
-    using System;
+    using archiver.Core.Interfaces;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     public class IOService : IIOService
     {
@@ -18,17 +14,9 @@
             return File.ReadAllLines(ProgramConfig.DirListFileLocation);
         }
 
-        public List<string> ReturnFileList()
+        public string[] ReturnFileList(string directory)
         {
-            var folderList = ReadConfigFileDirectoryList();
-            var fileList = new List<string>();
-
-            foreach (var directory in folderList)
-            {
-                fileList.AddRange(Directory.EnumerateFiles(ProgramConfig.FilePathCreator(ProgramConfig.FormatDriveToStringContext(), directory)));
-            }
-
-            return fileList;
+            return Directory.EnumerateFiles(ProgramConfig.FilePathCreator(ProgramConfig.FormatDriveToStringContext(), directory)).ToArray();
         }
 
         public bool CheckIfFileShouldBeUpdated(string srcPath, string destPath)
@@ -71,6 +59,6 @@
             return ProgramConfig.ReplaceDriveToArchiveContext(ProgramConfig.DestinationDrive.ToCharArray()[0], new DirectoryInfo(fileName).Parent.ToString());
         }
 
-        
+
     }
 }

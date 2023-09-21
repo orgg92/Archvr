@@ -1,12 +1,13 @@
 ﻿namespace archiver
 {
     using archiver.Application.Common;
-    using archiver.Application.Interfaces;
-    using archiver.Application.Services;
+    using archiver.Core.Interfaces;
+    using archiver.Core.Services;
+    using archiver.Infrastructure.Interfaces;
+    using archiver.Infrastructure.Services;
     using MediatR;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-    using System.Runtime.CompilerServices;
 
     public class Startup
     {
@@ -15,23 +16,21 @@
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            var builder = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json");
+            var builder = new ConfigurationBuilder();
 
             Configuration = builder.Build();
         }
 
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddLogging();
             services
                 .AddSingleton<IConfiguration>(Configuration)
-                .AddTransient(typeof(IPipelineBehavior<,>), typeof(BaseHandlerPipelineBehaviour<,>))
                 .AddMediatR(AppDomain.CurrentDomain.GetAssemblies())
-                .AddTransient<IConfigService, ConfigService>()
-                .AddTransient<ILoggerService, LoggerService>()
-                .AddTransient<IIOService, IOService>()
-                .AddTransient<IConsoleService, ConsoleService>();
+                .AddSingleton(typeof(IPipelineBehavior<,>), typeof(BaseHandlerPipelineBehaviour<,>))
+                .AddSingleton<IConfigService, ConfigService>()
+                .AddSingleton<ILoggerService, LoggerService>()
+                .AddSingleton<IIOService, IOService>()
+                .AddSingleton<IConsoleService, ConsoleService>()
             ;
         }
 

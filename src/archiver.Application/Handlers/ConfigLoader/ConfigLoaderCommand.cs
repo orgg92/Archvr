@@ -1,7 +1,8 @@
 ﻿namespace archiver.Application.Handlers.ConfigLoader
 {
-    using archiver.Application.Interfaces;
     using archiver.Core;
+    using archiver.Core.Enum;
+    using archiver.Core.Interfaces;
     using MediatR;
 
     public class ConfigLoaderCommand : IRequest<ConfigLoaderResponse> { }
@@ -32,7 +33,8 @@
                 {
                     return new ConfigLoaderResponse() { ConfigLoaded = false };
                 }
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 throw new ProgramException() { ErrorCode = ErrorCodes.CONFIG_LOAD_ERROR, ErrorMessage = e.Message };
             }

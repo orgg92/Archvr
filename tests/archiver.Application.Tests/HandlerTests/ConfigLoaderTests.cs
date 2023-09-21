@@ -1,7 +1,6 @@
 ﻿namespace archiver.Application.Tests.HandlerTests
 {
     using archiver.Application.Handlers.ConfigLoader;
-    using archiver.Core;
     using FluentAssertions;
     using NSubstitute;
     using System.Threading.Tasks;
@@ -30,7 +29,7 @@
         public async Task IfConfigExists_LoadConfig_ShouldBeSuccess()
         {
             _configService.CheckConfigExists().Returns(true);
-            _configService.CheckConfigHasBeenTouched().Returns(true);      
+            _configService.CheckConfigHasBeenTouched().Returns(true);
 
             var result = await SendAsync(_request);
 

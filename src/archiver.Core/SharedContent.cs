@@ -1,5 +1,6 @@
 ﻿namespace archiver.Core
 {
+    using archiver.Core.Enum;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -77,22 +78,6 @@
         }
     }
 
-    public enum HandlerNames
-    {
-        ConfigCreatorCommand,
-        ConfigLoaderCommand,
-        FileArchiverCommand,
-        FolderScannerCommand
-    }
-
-    public enum ErrorCodes
-    {
-        CONFIG_CREATION_ERROR,
-        CONFIG_LOAD_ERROR,
-        ARCHIVE_ERROR,
-        FOLDER_SCAN
-    }
-
     public class HandlerLoggingKeyValuePair
     {
         public string Key { get; set; }
@@ -102,7 +87,7 @@
     public class ProgramException : Exception
     {
         public ErrorCodes ErrorCode { get; set; }
-        public string  ErrorMessage { get; set; }
+        public string ErrorMessage { get; set; }
     }
 
     public class WriteConfigSettingModel

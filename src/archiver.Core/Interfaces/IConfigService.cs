@@ -1,4 +1,4 @@
-﻿namespace archiver.Application.Interfaces
+﻿namespace archiver.Core.Interfaces
 {
     public interface IConfigService
     {

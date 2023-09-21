@@ -1,7 +1,8 @@
 ﻿namespace archiver.Application.Handlers.ConfigCreator
 {
-    using archiver.Application.Interfaces;
     using archiver.Core;
+    using archiver.Core.Enum;
+    using archiver.Core.Interfaces;
     using MediatR;
 
     public class ConfigCreatorCommand : IRequest<ConfigCreatorResponse> { }
@@ -26,7 +27,8 @@
                     ? new ConfigCreatorResponse() { ConfigCreated = ConfigCreated.False }
                     : WriteNewConfigFile();
 
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 throw new ProgramException() { ErrorCode = ErrorCodes.CONFIG_CREATION_ERROR, ErrorMessage = e.Message };
             }
@@ -46,7 +48,8 @@
 
                 return new ConfigCreatorResponse() { ConfigCreated = ConfigCreated.True };
 
-            } catch (Exception e)
+            }
+            catch (Exception)
             {
                 throw new ProgramException() { ErrorCode = ErrorCodes.CONFIG_CREATION_ERROR };
             }

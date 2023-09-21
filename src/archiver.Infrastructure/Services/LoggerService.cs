@@ -1,12 +1,9 @@
-﻿namespace archiver.Infrastructure.Interfaces
+﻿namespace archiver.Infrastructure.Services
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
+    using archiver.Core;
+    using archiver.Infrastructure.Interfaces;
     using System.Text;
     using System.Threading.Tasks;
-    using archiver.Core;
-    using Infrastructure.Interfaces;
 
     public class LoggerService : ILoggerService
     {
@@ -32,7 +29,7 @@
                     await fs.WriteAsync(bytes);
                 };
             }
-            catch (IOException e)
+            catch (IOException)
             {
 
             }

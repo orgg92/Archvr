@@ -4,61 +4,124 @@
     using archiver.Application.Handlers.ConfigLoader;
     using archiver.Application.Handlers.FileArchiver;
     using archiver.Application.Handlers.FolderScanner;
-    using archiver.Application.Interfaces;
-    using MediatR;
+    using archiver.Core;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using NSubstitute;
-    using System.Collections;
+    using static archiver.Tests.TestRoot;
+
+    /// <summary>
+    /// Tests of the main class
+    /// </summary>
 
     [TestClass]
     [TestCategory("Program Tests")]
-    public class ProgramTests
+    public class ProgramTests : TestBase
     {
-        private IMediator _mockMediator;
-        private IConsoleService _mockConsoleService;
-        private Program _program;
+        private List<string> fileList;
+        private Archiver _archiver;
 
         [TestInitialize]
         public async Task Initialize()
         {
-            _mockMediator = Substitute.For<IMediator>();
-            _mockConsoleService = Substitute.For<IConsoleService>();
-            _program = new Program(_mockMediator, _mockConsoleService);
-        }
+            base.Initialize();
 
-        [TestMethod]
-        public async Task WhenAllTrue_FollowHappyPath()
-        {
-            var testFileName = "test_file.txt";
-            var fileList = new List<string>()
+            fileList = new List<string>()
             {
-                testFileName
+                "file1.txt",
+                "file.log"
             };
 
-            _mockMediator.When(x => x.Send(Arg.Any<ConfigCreatorCommand>()).Returns(new ConfigCreatorResponse()
-            {
-                ConfigCreated = ConfigCreated.True,
-                HandlerException = null
-            }));
+            _archiver = Substitute.For<Archiver>(_mediator, _consoleService);
+        }
 
-            _mockMediator.When(x => x.Send(Arg.Any<ConfigLoaderCommand>()).Returns(new ConfigLoaderResponse()
-            {
-                ConfigLoaded = true,
-                HandlerException = null
-            }));
 
-            _mockMediator.When(x => x.Send(Arg.Any<FolderScannerCommand>()).Returns(new FolderScannerResponse()
-            {
-                FileList = fileList,
-                HandlerException = null
-            })) ;
+        /// <summary>
+        /// Failed config creation means the program can't continue
+        /// </summary>
+        /// 
 
-            _mockMediator.When(x => x.Send(Arg.Any<FileArchiverCommand>()).Returns(new FileArchiverResponse()
-            {
-               ArchiveSuccess = true,
-               HandlerException = null
-            }));
+        [TestMethod]
+        public async Task IfConfigCreationFails_ShouldNotRunToCompletion()
+        {
+            _archiver.CreateConfig().Returns(new ConfigCreatorResponse() { ConfigCreated = ConfigCreated.True });
+
+            await _archiver.Initialize();
+
+            await _archiver.Received().CreateConfig();
+            await _archiver.DidNotReceive().LoadConfig();
+            await _archiver.DidNotReceive().ScanDirectories();
+            await _archiver.DidNotReceive().ArchiveFile(Arg.Any<string>(), Arg.Any<int>(), Arg.Any<int>());
 
         }
+
+        /// <summary>
+        /// Failed config load means the program can't continue
+        /// </summary>
+        /// 
+
+        [TestMethod]
+        public async Task IfConfigLoadingFails_ShouldNotRunToCompletion()
+        {
+            _archiver.CreateConfig().Returns(new ConfigCreatorResponse() { ConfigCreated = ConfigCreated.False });
+            _archiver.LoadConfig().Returns(new ConfigLoaderResponse() { ConfigLoaded = false, HandlerException = null });
+
+            await _archiver.Initialize();
+
+            await _archiver.Received().CreateConfig();
+            await _archiver.Received().LoadConfig();
+            await _archiver.DidNotReceive().ScanDirectories();
+            await _archiver.DidNotReceive().ArchiveFile(Arg.Any<string>(), Arg.Any<int>(), Arg.Any<int>());
+
+        }
+
+        /// <summary>
+        /// Program should run to completion
+        /// </summary>
+        /// 
+
+        [TestMethod]
+        public async Task IfConfigCreationSucceeds_ShouldRunToCompletion()
+        {
+            _archiver.CreateConfig().Returns(new ConfigCreatorResponse() { ConfigCreated = ConfigCreated.False });
+            _archiver.LoadConfig().Returns(new ConfigLoaderResponse() { ConfigLoaded = true, HandlerException = null });
+            _archiver.ScanDirectories().Returns(new FolderScannerResponse() { FileList = fileList });
+            _archiver.ArchiveFile(Arg.Any<string>()).Returns(new FileArchiverResponse() { ArchiveSuccess = true });
+            _archiver.ArchiveFile(Arg.Any<string>(), Arg.Any<int>(), Arg.Any<int>()).Returns(new FileArchiverResponse() { ArchiveSuccess = true });
+
+            await _archiver.Initialize();
+
+            await _archiver.Received().CreateConfig();
+            await _archiver.Received().LoadConfig();
+            await _archiver.Received().ScanDirectories();
+            await _archiver.Received(2).ArchiveFile(Arg.Any<string>(), Arg.Any<int>(), Arg.Any<int>());
+
+        }
+
+        /// <summary>
+        /// Locked files should be handled if present
+        /// </summary>
+        /// 
+
+        [TestMethod]
+        public async Task IfAnyLockedFiles_ShouldBeArchived()
+        {
+            _archiver.CreateConfig().Returns(new ConfigCreatorResponse() { ConfigCreated = ConfigCreated.False });
+            _archiver.LoadConfig().Returns(new ConfigLoaderResponse() { ConfigLoaded = true, HandlerException = null });
+            _archiver.ScanDirectories().Returns(new FolderScannerResponse() { FileList = fileList });
+            _archiver.ArchiveFile(Arg.Any<string>()).Returns(new FileArchiverResponse() { ArchiveSuccess = false });
+            _archiver.ArchiveFile(Arg.Any<string>(), Arg.Any<int>(), Arg.Any<int>()).Returns(new FileArchiverResponse() { ArchiveSuccess = false });
+            ProgramConfig.RetryCount = 5;
+
+            await _archiver.Initialize();
+
+            await _archiver.Received().CreateConfig();
+            await _archiver.Received().LoadConfig();
+            await _archiver.Received().ScanDirectories();
+            await _archiver.Received(4).ArchiveFile(Arg.Any<string>(), Arg.Any<int>(), Arg.Any<int>());
+
+
+
+        }
+
     }
 }

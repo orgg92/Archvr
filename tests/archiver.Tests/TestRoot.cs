@@ -1,7 +1,8 @@
 namespace archiver.Tests
 {
     using archiver;
-    using archiver.Application.Interfaces;
+    using archiver.Core.Interfaces;
+    using archiver.Infrastructure.Interfaces;
     using MediatR;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -12,10 +13,11 @@ namespace archiver.Tests
     public static class TestRoot
     {
 
-        internal static IConfigService _configCreatorService;
+        internal static IConfigService _configService;
         internal static IConsoleService _consoleService;
         internal static IIOService _ioService;
         internal static IServiceScopeFactory _scopeFactory;
+        internal static IMediator _mediator;
 
         [AssemblyInitialize]
         public static void Initialize(TestContext testContext)
@@ -29,10 +31,12 @@ namespace archiver.Tests
             startup.ConfigureServices(services);
 
             services
-                .RegisterMockReplacement(out _configCreatorService, true)
+                .RegisterMockReplacement(out _configService, true)
                 .RegisterMockReplacement(out _ioService, true)
-                .RegisterMockReplacement(out _consoleService, false)
+                .RegisterMockReplacement(out _consoleService, true)
+                .RegisterMockReplacement(out _mediator, true)
                 ;
+
 
             _scopeFactory = services.BuildServiceProvider().GetRequiredService<IServiceScopeFactory>();
 
@@ -42,21 +46,21 @@ namespace archiver.Tests
         {
             using var scope = _scopeFactory.CreateScope();
 
-            var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+            _mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
 
-            return await mediator.Send(request);
+            return await _mediator.Send(request);
         }
 
 
-        public static IServiceCollection RegisterMockReplacement<TMock>( 
-            this IServiceCollection services, 
+        public static IServiceCollection RegisterMockReplacement<TMock>(
+            this IServiceCollection services,
             out TMock mockInstance,
             bool throwIfExistingDependencyIsMissing)
             where TMock : class
         {
             mockInstance = Substitute.For<TMock>();
             return services.RegisterMockReplacement(mockInstance, throwIfExistingDependencyIsMissing);
-        } 
+        }
 
         public static IServiceCollection RegisterMockReplacement<TMock>(
             this IServiceCollection services,
@@ -69,7 +73,8 @@ namespace archiver.Tests
             if (descriptor is not null)
             {
                 services.Remove(descriptor);
-            } else if (throwIfExistingDependencyIsMissing)
+            }
+            else if (throwIfExistingDependencyIsMissing)
             {
                 throw new DI_Exception();
             }
@@ -78,7 +83,7 @@ namespace archiver.Tests
 
             return services;
         }
-            
+
 
     }
 
