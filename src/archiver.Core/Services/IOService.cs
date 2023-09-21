@@ -1,7 +1,7 @@
-﻿namespace archiver.Application.Services
+﻿namespace archiver.Core.Services
 {
-    using archiver.Application.Interfaces;
     using archiver.Core;
+    using archiver.Core.Interfaces;
     using System.Collections.Generic;
     using System.Linq;
 

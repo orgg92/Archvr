@@ -1,8 +1,8 @@
 ﻿namespace archiver.Application.Handlers.ConfigLoader
 {
-    using archiver.Application.Interfaces;
     using archiver.Core;
     using archiver.Core.Enum;
+    using archiver.Core.Interfaces;
     using MediatR;
 
     public class ConfigLoaderCommand : IRequest<ConfigLoaderResponse> { }

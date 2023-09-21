@@ -13,13 +13,14 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    public class Archiver : IArchiver
+    public class Archiver
     {
-
         private IMediator _mediator;
         private IConsoleService _consoleService;
 
         public static List<string> _lockedFiles;
+        private int RetryCount = ProgramConfig.RetryCount,
+                    RetryIteration = 0;
 
         public Archiver(IMediator mediator, IConsoleService consoleService)
         {
@@ -54,7 +55,6 @@
 
             await _consoleService.ClearConsole();
             await _consoleService.SetConsoleSize();
-
             await _consoleService.WriteToConsole(ProgramConfig.ResponsiveSpacer, Infrastructure.Services.LoggingLevel.BASIC_MESSAGES);
 
             var configCreation = await CreateConfig();
@@ -71,14 +71,9 @@
 
                     await ProcessFileList(result.FileList);
 
-                    // Handle files which were locked or unavailable during the first pass
-                    if (_lockedFiles.Any())
-                    {
-                        foreach (var file in _lockedFiles)
-                        {
-                            var processFile = await ArchiveFile(file);
-                        }
-                    }
+                    // Handle files which were locked or unavailable during the first pass, if none program runs to completion
+                    await ProcessLockedFiles();
+
                 }
 
                 else
@@ -89,13 +84,25 @@
 
             else if (configCreation.ConfigCreated == ConfigCreated.True)
             {
-                await _consoleService.WriteToConsole("Config created but requires user setup", Infrastructure.Services.LoggingLevel.BASIC_MESSAGES);
                 // user needs to setup their config file after creation
+                await _consoleService.WriteToConsole("Config created but requires user setup", Infrastructure.Services.LoggingLevel.BASIC_MESSAGES);
             }
 
             await _consoleService.WriteToConsole(SharedContent.ReturnDateFormattedConsoleMessage($"Archiving completed without issue"), Infrastructure.Services.LoggingLevel.BASIC_MESSAGES);
-
             await _consoleService.WriteToConsole(ProgramConfig.ResponsiveSpacer, Infrastructure.Services.LoggingLevel.BASIC_MESSAGES);
+        }
+
+        public async Task ProcessLockedFiles()
+        {
+            if (_lockedFiles.Any())
+            {
+                if (RetryIteration <= RetryCount)
+                {
+                    // attempt to archive files again
+                    await ProcessFileList(_lockedFiles, true);
+                    RetryIteration++;
+                }
+            }
         }
 
         public async Task ProcessFileList(IEnumerable<string> fileList, bool retryMode = false)
@@ -107,14 +114,18 @@
             foreach (var file in fileList)
             {
 
-                var fileProgressMeter = $"[{i}/{fileList.Count()}]";
-
-                var message = $"{fileProgressMeter} {new String('-', 25 - fileProgressMeter.Count())}> {file}";
+                var fileProgressMeter = $"[{i}/{fileList.Count() - 1}]";
+                
+                // message to reflect the destination filepath of the target file
+                var message = $"{fileProgressMeter} " +
+                    $"{new String('-', 25 - fileProgressMeter.Count() - 1)}> " +
+                    $"{file} \r\n" +
+                    $"{new String('-', 25)}> " +
+                    $"{ProgramConfig.GetFullArchiveAndFilePath(file)}";
 
                 await _consoleService.WriteToConsole(message, Infrastructure.Services.LoggingLevel.FILE_STATUS);
 
-                //var processFile = await _mediator.Send(new FileArchiverCommand() { FileName = file, FileNumber = i + 1, TotalFiles = fileList.Count() });
-                var processFile = await ArchiveFile(file, i + 1, fileList.Count());
+                var processFile = await ArchiveFile(file, i + 1, fileList.Count() - 1);
 
                 if (!processFile.ArchiveSuccess && !retryMode)
                 {

@@ -56,6 +56,7 @@
         public static string GetFullArchiveAndFilePath(string filepath)
         {
             var fileName = Path.GetFileName(filepath);
+            var folderName = Path.GetDirectoryName(filepath);
             var drive = ProgramConfig.DestinationDrive;
             var archiveFolder = ProgramConfig.ArchiveFolderName;
             return Path.Combine($"{drive}:\\{archiveFolder}", fileName).Replace(@"\\", @"\");

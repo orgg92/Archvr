@@ -1,6 +1,7 @@
-﻿namespace archiver.Infrastructure.Interfaces
+﻿namespace archiver.Infrastructure.Services
 {
     using archiver.Core;
+    using archiver.Infrastructure.Interfaces;
     using System.Text;
     using System.Threading.Tasks;
 

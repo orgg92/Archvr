@@ -1,8 +1,8 @@
 ﻿namespace archiver.Application.Handlers.FileArchiver
 {
-    using Application.Interfaces;
     using archiver.Core;
     using archiver.Core.Enum;
+    using archiver.Core.Interfaces;
     using archiver.Infrastructure.Interfaces;
     using MediatR;
 
@@ -28,17 +28,14 @@
         public async Task<FileArchiverResponse> Handle(FileArchiverCommand request, CancellationToken cancellationToken)
         {
             try
-            {
-
+            { 
                 var destinationDirectory = _ioService.GetDestinationDirectory(request.FileName);
 
-                // check - if not exists, create
                 if (!_ioService.CheckDirectoryExists(destinationDirectory))
                 {
                     _ioService.CreateDirectory(destinationDirectory);
                 }
 
-                // get full destination filepath and create if not exists
                 var destPath = $"{destinationDirectory}\\{new DirectoryInfo(request.FileName).Name}";
                 var srcPath = request.FileName;
 
@@ -46,7 +43,6 @@
                 // OR
                 // the DESTINATION FILE last modified is before SOURCE FILE last modified
 
-                // Debug, remove after || 
                 if (_ioService.CheckIfFileShouldBeUpdated(srcPath, destPath))
                 {
                     if (ProgramConfig.LogLevel > 0)

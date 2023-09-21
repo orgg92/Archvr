@@ -1,8 +1,8 @@
 ﻿namespace archiver.Application.Handlers.ConfigCreator
 {
-    using archiver.Application.Interfaces;
     using archiver.Core;
     using archiver.Core.Enum;
+    using archiver.Core.Interfaces;
     using MediatR;
 
     public class ConfigCreatorCommand : IRequest<ConfigCreatorResponse> { }

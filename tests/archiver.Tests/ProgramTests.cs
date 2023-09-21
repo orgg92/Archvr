@@ -4,6 +4,7 @@
     using archiver.Application.Handlers.ConfigLoader;
     using archiver.Application.Handlers.FileArchiver;
     using archiver.Application.Handlers.FolderScanner;
+    using archiver.Core;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using NSubstitute;
     using static archiver.Tests.TestRoot;
@@ -92,7 +93,33 @@
             await _archiver.Received().CreateConfig();
             await _archiver.Received().LoadConfig();
             await _archiver.Received().ScanDirectories();
-            await _archiver.Received().ArchiveFile(Arg.Any<string>(), Arg.Any<int>(), Arg.Any<int>());
+            await _archiver.Received(2).ArchiveFile(Arg.Any<string>(), Arg.Any<int>(), Arg.Any<int>());
+
+        }
+
+        /// <summary>
+        /// Locked files should be handled if present
+        /// </summary>
+        /// 
+
+        [TestMethod]
+        public async Task IfAnyLockedFiles_ShouldBeArchived()
+        {
+            _archiver.CreateConfig().Returns(new ConfigCreatorResponse() { ConfigCreated = ConfigCreated.False });
+            _archiver.LoadConfig().Returns(new ConfigLoaderResponse() { ConfigLoaded = true, HandlerException = null });
+            _archiver.ScanDirectories().Returns(new FolderScannerResponse() { FileList = fileList });
+            _archiver.ArchiveFile(Arg.Any<string>()).Returns(new FileArchiverResponse() { ArchiveSuccess = false });
+            _archiver.ArchiveFile(Arg.Any<string>(), Arg.Any<int>(), Arg.Any<int>()).Returns(new FileArchiverResponse() { ArchiveSuccess = false });
+            ProgramConfig.RetryCount = 5;
+
+            await _archiver.Initialize();
+
+            await _archiver.Received().CreateConfig();
+            await _archiver.Received().LoadConfig();
+            await _archiver.Received().ScanDirectories();
+            await _archiver.Received(4).ArchiveFile(Arg.Any<string>(), Arg.Any<int>(), Arg.Any<int>());
+
+
 
         }
 

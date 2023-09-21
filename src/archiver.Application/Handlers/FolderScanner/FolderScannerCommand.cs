@@ -1,8 +1,8 @@
 ﻿namespace archiver.Application.Handlers.FolderScanner
 {
-    using archiver.Application.Interfaces;
     using archiver.Core;
     using archiver.Core.Enum;
+    using archiver.Core.Interfaces;
     using archiver.Infrastructure.Interfaces;
     using MediatR;
 
