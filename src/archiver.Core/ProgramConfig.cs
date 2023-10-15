@@ -7,6 +7,8 @@
     {
         public static IEnumerable<WriteConfigSettingModel> configValues;
 
+        public static BaseConfigValues baseConfigValues;
+
         /// <summary>
         /// Variables imported from text file for use throughout the application
         /// </summary>

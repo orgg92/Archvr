@@ -64,9 +64,7 @@
                         {
                             using (StreamWriter sw = new StreamWriter(fs))
                             {
-                                var config = new BaseConfigValues();
-
-                                foreach (var value in config.Values)
+                                foreach (var value in ProgramConfig.baseConfigValues.Values)
                                 {
                                     // Create config file with boilerplate values
                                     {
@@ -79,7 +77,6 @@
                     else
                     {
                         // if it's not config.ini: create blank file for writing later
-
                         File.Create(filePath);
                     }
                 }

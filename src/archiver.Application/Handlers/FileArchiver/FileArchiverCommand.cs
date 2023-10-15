@@ -28,7 +28,7 @@
         public async Task<FileArchiverResponse> Handle(FileArchiverCommand request, CancellationToken cancellationToken)
         {
             try
-            { 
+            {
                 var destinationDirectory = _ioService.GetDestinationDirectory(request.FileName);
 
                 if (!_ioService.CheckDirectoryExists(destinationDirectory))

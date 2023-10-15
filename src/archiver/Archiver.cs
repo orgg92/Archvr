@@ -115,7 +115,7 @@
             {
 
                 var fileProgressMeter = $"[{i}/{fileList.Count() - 1}]";
-                
+
                 // message to reflect the destination filepath of the target file
                 var message = $"{fileProgressMeter} " +
                     $"{new String('-', 25 - fileProgressMeter.Count() - 1)}> " +
