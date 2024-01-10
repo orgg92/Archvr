@@ -32,7 +32,7 @@
                 {
                     // find the logging announcement and write to console
                     var handlerMessage = SharedContent.ReturnMessageForHandler(handlerName);
-                    await _consoleService.WriteToConsole($"{SharedContent.ReturnFormattedDateTimeToString()} {handlerMessage}", Infrastructure.Services.LoggingLevel.BASIC_MESSAGES);
+                    await _consoleService.WriteToConsole($"{SharedContent.ReturnFormattedDateTimeToString()} {handlerMessage}", Infrastructure.Services.LoggingLevel.BASIC_MESSAGES, ConsoleColor.Yellow);
                 }
 
                 var response = await next();

@@ -16,7 +16,7 @@
 
         public string[] ReturnFileList(string directory)
         {
-            return Directory.EnumerateFiles(ProgramConfig.FilePathCreator(ProgramConfig.FormatDriveToStringContext(), directory)).ToArray();
+            return Directory.EnumerateFiles(ProgramConfig.FilePathCreator(ProgramConfig.FormatDriveToStringContext(), directory), "*.*", SearchOption.AllDirectories).ToArray();
         }
 
         public bool CheckIfFileShouldBeUpdated(string srcPath, string destPath)
