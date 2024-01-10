@@ -50,7 +50,9 @@
 
         public static string ReplaceDriveToArchiveContext(char drive, string filepath)
         {
-            var directoryName = new DirectoryInfo(filepath).Name;
+            // -- root minus parent
+            var fullPath = new DirectoryInfo(filepath);
+            var directoryName = fullPath.ToString().Split(fullPath.Root.ToString())[1];
             var archiveContextPath = $"{drive}:\\{ProgramConfig.ArchiveFolderName}\\{directoryName}";
             return new string(archiveContextPath);
         }
@@ -59,9 +61,15 @@
         {
             var fileName = Path.GetFileName(filepath);
             var folderName = Path.GetDirectoryName(filepath);
-            var drive = ProgramConfig.DestinationDrive;
+            var archiveDrive = ProgramConfig.DestinationDrive;
             var archiveFolder = ProgramConfig.ArchiveFolderName;
-            return Path.Combine($"{drive}:\\{archiveFolder}", fileName).Replace(@"\\", @"\");
+            //var targetFilepath = filepath.Replace(ProgramConfig.TargetDrive, drive);
+            //var destinationTarget = filepath.Replace(filepath.ToCharArray()[0], archiveDrive[0]);
+            var destinationTarget = filepath.Split(filepath.ToCharArray()[1]);
+            var fullDestination = $"{archiveDrive}:\\{archiveFolder}\\{destinationTarget[1]}".Replace(@"\\", @"\");
+            // R:\Test\Path
+            return fullDestination;
+            //return Path.Combine($"{drive}:\\{archiveFolder}", filepath).Replace(@"\\", @"\");
         }
     }
 

@@ -14,7 +14,7 @@
             _loggerService = loggerService;
         }
 
-        public async Task WriteToConsole(string textString, LoggingLevel loggingLevel)
+        public async Task WriteToConsole(string textString, LoggingLevel loggingLevel, ConsoleColor? colour = ConsoleColor.Gray)
         {
             // if message doesn't meet the logging level swallow the invocation and don't write to console
             var result = ShouldMessageBeLogged(loggingLevel);
