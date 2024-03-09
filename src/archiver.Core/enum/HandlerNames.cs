@@ -5,6 +5,7 @@
         ConfigCreatorCommand,
         ConfigLoaderCommand,
         FileArchiverCommand,
-        FolderScannerCommand
+        FolderScannerCommand,
+        FileScannerCommand
     }
 }

@@ -4,6 +4,6 @@
 
     public class FolderScannerResponse : BaseResponse
     {
-        public IEnumerable<string> FileList { get; set; }
+        public IEnumerable<string> FolderList { get; set; }
     }
 }

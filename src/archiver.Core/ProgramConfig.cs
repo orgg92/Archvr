@@ -59,17 +59,11 @@
 
         public static string GetFullArchiveAndFilePath(string filepath)
         {
-            var fileName = Path.GetFileName(filepath);
-            var folderName = Path.GetDirectoryName(filepath);
             var archiveDrive = ProgramConfig.DestinationDrive;
             var archiveFolder = ProgramConfig.ArchiveFolderName;
-            //var targetFilepath = filepath.Replace(ProgramConfig.TargetDrive, drive);
-            //var destinationTarget = filepath.Replace(filepath.ToCharArray()[0], archiveDrive[0]);
             var destinationTarget = filepath.Split(filepath.ToCharArray()[1]);
             var fullDestination = $"{archiveDrive}:\\{archiveFolder}\\{destinationTarget[1]}".Replace(@"\\", @"\");
-            // R:\Test\Path
             return fullDestination;
-            //return Path.Combine($"{drive}:\\{archiveFolder}", filepath).Replace(@"\\", @"\");
         }
     }
 

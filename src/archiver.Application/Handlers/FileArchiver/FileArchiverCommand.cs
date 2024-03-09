@@ -46,13 +46,13 @@
                 if (_ioService.CheckIfFileShouldBeUpdated(srcPath, destPath))
                 {
                     if (ProgramConfig.LogLevel > 0)
-                        await _consoleService.WriteToConsole("Source file is newer than archive file... Overwriting", Infrastructure.Services.LoggingLevel.BASIC_MESSAGES, ConsoleColor.Green);
+                        await _consoleService.WriteToConsole("Source file is newer than archive file... Overwriting", LoggingLevel.BASIC_MESSAGES, ConsoleColor.Green);
 
                     _ioService.CopyFile(srcPath, destPath);
                 }
                 else if (ProgramConfig.LogLevel > 0)
                 {
-                    await _consoleService.WriteToConsole($"Skipping file", Infrastructure.Services.LoggingLevel.BASIC_MESSAGES, ConsoleColor.Red);
+                    await _consoleService.WriteToConsole($"Skipping file", LoggingLevel.BASIC_MESSAGES, ConsoleColor.Red);
                 }
 
 

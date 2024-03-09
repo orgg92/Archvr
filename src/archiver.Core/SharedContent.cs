@@ -43,6 +43,7 @@
             new HandlerLoggingKeyValuePair() { Key = "ConfigCreatorCommand", Value = "Checking for config..."},
             new HandlerLoggingKeyValuePair() { Key = "ConfigLoaderCommand", Value = "Attempting to load config..."},
             new HandlerLoggingKeyValuePair() { Key = "FolderScannerCommand", Value = "Starting to scan directories..."},
+            new HandlerLoggingKeyValuePair() { Key = "FileScannerCommand", Value = "Attempting to scan directory for files..."},
             new HandlerLoggingKeyValuePair() { Key = "FileArchiverCommand", Value = "Attempting to archive files..."}
         };
 

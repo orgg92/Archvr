@@ -1,5 +1,6 @@
 ﻿namespace archiver.Infrastructure.Interfaces
 {
+    using archiver.Core;
     using archiver.Infrastructure.Services;
 
     public interface IConsoleService

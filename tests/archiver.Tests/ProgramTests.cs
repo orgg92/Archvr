@@ -49,7 +49,7 @@
 
             await _archiver.Received().CreateConfig();
             await _archiver.DidNotReceive().LoadConfig();
-            await _archiver.DidNotReceive().ScanDirectories();
+            await _archiver.DidNotReceive().ScanConfigForDirectories();
             await _archiver.DidNotReceive().ArchiveFile(Arg.Any<string>(), Arg.Any<int>(), Arg.Any<int>());
 
         }
@@ -69,7 +69,7 @@
 
             await _archiver.Received().CreateConfig();
             await _archiver.Received().LoadConfig();
-            await _archiver.DidNotReceive().ScanDirectories();
+            await _archiver.DidNotReceive().ScanConfigForDirectories();
             await _archiver.DidNotReceive().ArchiveFile(Arg.Any<string>(), Arg.Any<int>(), Arg.Any<int>());
 
         }
@@ -84,7 +84,7 @@
         {
             _archiver.CreateConfig().Returns(new ConfigCreatorResponse() { ConfigCreated = ConfigCreated.False });
             _archiver.LoadConfig().Returns(new ConfigLoaderResponse() { ConfigLoaded = true, HandlerException = null });
-            _archiver.ScanDirectories().Returns(new FolderScannerResponse() { FileList = fileList });
+            //_archiver.ScanConfigForDirectories().Returns(new FolderScannerResponse() { FileList = fileList });
             _archiver.ArchiveFile(Arg.Any<string>()).Returns(new FileArchiverResponse() { ArchiveSuccess = true });
             _archiver.ArchiveFile(Arg.Any<string>(), Arg.Any<int>(), Arg.Any<int>()).Returns(new FileArchiverResponse() { ArchiveSuccess = true });
 
@@ -92,7 +92,7 @@
 
             await _archiver.Received().CreateConfig();
             await _archiver.Received().LoadConfig();
-            await _archiver.Received().ScanDirectories();
+            await _archiver.Received().ScanConfigForDirectories();
             await _archiver.Received(2).ArchiveFile(Arg.Any<string>(), Arg.Any<int>(), Arg.Any<int>());
 
         }
@@ -107,7 +107,7 @@
         {
             _archiver.CreateConfig().Returns(new ConfigCreatorResponse() { ConfigCreated = ConfigCreated.False });
             _archiver.LoadConfig().Returns(new ConfigLoaderResponse() { ConfigLoaded = true, HandlerException = null });
-            _archiver.ScanDirectories().Returns(new FolderScannerResponse() { FileList = fileList });
+            _archiver.ScanConfigForDirectories().Returns(new FolderScannerResponse() { FileList = fileList });
             _archiver.ArchiveFile(Arg.Any<string>()).Returns(new FileArchiverResponse() { ArchiveSuccess = false });
             _archiver.ArchiveFile(Arg.Any<string>(), Arg.Any<int>(), Arg.Any<int>()).Returns(new FileArchiverResponse() { ArchiveSuccess = false });
             ProgramConfig.RetryCount = 5;
@@ -116,7 +116,7 @@
 
             await _archiver.Received().CreateConfig();
             await _archiver.Received().LoadConfig();
-            await _archiver.Received().ScanDirectories();
+            await _archiver.Received().ScanConfigForDirectories();
             await _archiver.Received(4).ArchiveFile(Arg.Any<string>(), Arg.Any<int>(), Arg.Any<int>());
 
 

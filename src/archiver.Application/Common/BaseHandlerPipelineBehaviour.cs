@@ -27,12 +27,12 @@
 
             try
             {
-                // if request is to archive a file do not announce message in pipeline
-                if (handlerName != HandlerNames.FileArchiverCommand.ToString())
+                // if request is to archive a file OR scan for files do not announce message in pipeline 
+                if (handlerName != HandlerNames.FileArchiverCommand.ToString() && handlerName != HandlerNames.FileScannerCommand.ToString())
                 {
                     // find the logging announcement and write to console
                     var handlerMessage = SharedContent.ReturnMessageForHandler(handlerName);
-                    await _consoleService.WriteToConsole($"{SharedContent.ReturnFormattedDateTimeToString()} {handlerMessage}", Infrastructure.Services.LoggingLevel.BASIC_MESSAGES, ConsoleColor.Yellow);
+                    await _consoleService.WriteToConsole($"{SharedContent.ReturnFormattedDateTimeToString()} {handlerMessage}", LoggingLevel.BASIC_MESSAGES, ConsoleColor.Yellow);
                 }
 
                 var response = await next();
@@ -44,7 +44,7 @@
             catch (ProgramException e)
             {
                 await _consoleService.WriteToConsole
-                    ($"{SharedContent.ReturnFormattedDateTimeToString()} {SharedContent.ReturnErrorMessageForErrorCode(e.ErrorCode.ToString())}", Infrastructure.Services.LoggingLevel.BASIC_MESSAGES);
+                    ($"{SharedContent.ReturnFormattedDateTimeToString()} {SharedContent.ReturnErrorMessageForErrorCode(e.ErrorCode.ToString())}", LoggingLevel.BASIC_MESSAGES);
 
                 throw e;
             }
