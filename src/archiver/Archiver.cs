@@ -64,6 +64,13 @@
 
             var configCreation = await CreateConfig();
 
+            if (configCreation.ConfigCreated == ConfigCreated.True)
+            {
+                // user needs to setup their config file after creation
+                await _consoleService.WriteToConsole(SharedContent.ReturnDateFormattedConsoleMessage("Config created but requires user setup"), LoggingLevel.BASIC_MESSAGES);
+                return;
+            }
+
             if (configCreation.ConfigCreated == ConfigCreated.False)
             {
                 var configResult = await LoadConfig();
@@ -83,7 +90,7 @@
                     await ProcessFileList(_fileList);
 
                     // Handle files which were locked or unavailable during the first pass, if none program runs to completion
-                    await ProcessLockedFiles();
+                     await ProcessLockedFiles();
 
                 }
 
@@ -91,12 +98,6 @@
                 {
                     await _consoleService.WriteToConsole("There was an issue loading configuration settings... Check config.ini", LoggingLevel.BASIC_MESSAGES);
                 }
-            }
-
-            else if (configCreation.ConfigCreated == ConfigCreated.True)
-            {
-                // user needs to setup their config file after creation
-                await _consoleService.WriteToConsole("Config created but requires user setup", LoggingLevel.BASIC_MESSAGES);
             }
 
             await _consoleService.WriteToConsole(SharedContent.ReturnDateFormattedConsoleMessage($"Archiving completed without issue"), LoggingLevel.BASIC_MESSAGES);
@@ -123,7 +124,6 @@
             _fileList = new List<string>();
 
             var threadList = new List<Thread>();
-            var numberOfThreads = Process.GetCurrentProcess().Threads.Count;
 
             for(int i=0; i < folderList.Count(); i++)
             {
